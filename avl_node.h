@@ -10,7 +10,7 @@ template <class T>
 class avlNode
 {
 private:
-    T* data;
+    T *data;
     avlNode *left;
     avlNode *right;
     avlNode *parent;
@@ -18,15 +18,15 @@ private:
 
 public:
     avlNode() = default;
-    avlNode(T* const value);
-    avlNode(const avlNode<T>* node);
+    avlNode(T *const value);
+    avlNode(const avlNode<T> *node);
     ~avlNode() = default;
     avlNode *getLeft();
     avlNode *getRight();
     avlNode *getParent();
-    T* getValue();
-    const T* getValue() const;
-    void setValue(T* const value);
+    T *getValue();
+    const T *getValue() const;
+    void setValue(T *const value);
     void setLeft(avlNode<T> *new_left);
     void setRight(avlNode<T> *new_right);
     void setParent(avlNode<T> *new_parent);
@@ -36,9 +36,8 @@ public:
     bool isLeftChild();
     bool isRightChild();
 
-    void copyFrom(avlNode<T>* node);
-    void swapWithChild(avlNode<T>* node, bool is_right);
+    void copyFrom(avlNode<T> *node);
+    void swapWithChild(avlNode<T> *node, bool is_right);
 };
-
 
 #endif
