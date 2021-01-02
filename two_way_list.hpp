@@ -87,7 +87,6 @@ public:
     const int getKey() { return this->key; }
     void setKey(int new_key) { this->key = new_key; }
 
-
     twListResult_t addFirst(const T &to_add);
 
     twListResult_t addLast(const T &to_add);
@@ -99,6 +98,8 @@ public:
     twListResult_t remove(twListNode<T> *to_remove);
 
     twList<T> clone();
+
+    twListNode<T>* contains(const T &element);
 
     std::string printList();
     /** //logical operator comparison functions://
@@ -115,12 +116,12 @@ public:
          *  T operator of logical comparison (matching operator for every function):
          * (==,!=,<=,>=,<,>)
     */
-       bool operator==(const twList<T> &twList);
-       bool operator!=(const twList<T> &twList);
-       bool operator<=(const twList<T> &twList);
-       bool operator>=(const twList<T> &twList);
-       bool operator<(const twList<T> &twList);
-       bool operator>(const twList<T> &twList);
+    bool operator==(const twList<T> &twList);
+    bool operator!=(const twList<T> &twList);
+    bool operator<=(const twList<T> &twList);
+    bool operator>=(const twList<T> &twList);
+    bool operator<(const twList<T> &twList);
+    bool operator>(const twList<T> &twList);
 };
 
 //implementation of twList class functions//
@@ -134,7 +135,6 @@ twList<T>::twList() : head(nullptr), tail(nullptr)
     head->setNext(tail);
     tail->setPrev(head);
 }
-
 
 template <class T>
 twList<T>::twList(int key) : head(nullptr), tail(nullptr), key(key)
@@ -159,6 +159,19 @@ twList<T>::twList(const twList &tw_list) : head(tw_list.head.clone()), tail(tw_l
         addLast(new_node);
     }
     this->key = tw_list.key;
+}
+
+template <class T>
+twListNode<T>* twList<T>::contains(const T &element)
+{
+    twListNode<T> *iter = this->getHead();
+    while (iter != tw_list.getTail())
+    {
+        if (iter->getValue() == element.getKey())
+            return iter;
+        iter = iter->getNext();
+    }
+    return nullptr;
 }
 
 template <class T>
@@ -265,7 +278,7 @@ twListResult_t twList<T>::addFirst(const T &to_add)
     {
         return TW_LIST_FAILURE;
     }
-//    if (!to_add){
+    //    if (!to_add){
     //        return TW_LIST_INVALID_INPUT;
     //    }
     twListNode<T> *curr_first = head->getNext();

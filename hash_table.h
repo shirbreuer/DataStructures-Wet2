@@ -2,6 +2,7 @@
 #define HASH_TABLE_H
 
 #include "two_way_list.hpp"
+#include "two_way_list_node.hpp"
 
 #define INITIAL_CAPACITY 16
 #define DEFAULT_UPPER_FACTOR 0.75f
@@ -55,8 +56,17 @@ public:
     void setFactor(float new_factor) { this->load_factor = new_factor; }
     void setArray(twList<T> **new_table) { this->hash_array = new_table; }
 
+
     hashTableResult add(const T& element, int (*function)(int));
-     find(const T& element, int (*function)(int));
+    hashTableResult remove(const T& element, int (*function)(int));
+    twListNode<T>* find(const T& element, int (*function)(int));
+    
+    
+    
+    void resize(int size_change);
+    bool resizeRequired(int size_change);
+    void updateLoadFactor();
+    void transfer(const T &element, int (*function)(int));
 
     void hashSetNullptr(int size);
     int hashFunction(int key) { return key % size; };
