@@ -15,6 +15,7 @@ avlNode<T>::avlNode(const avlNode<T> *node)
     this->left = node->getLeft();
     this->right = node->getRight();
     this->parent = node->getParent();
+    this->rank=getRight().getRank()+getLeft().getRank()+1;
 }
 
 template <class T>
@@ -58,7 +59,11 @@ void avlNode<T>::setLeft(avlNode<T> *new_left)
 {
     if (new_left)
         new_left->setParent(this);
+    int oldLeftRank = left->getRank();
+    int newLeftRank = new_left->getRank();
+    int newRank = getRank() - oldLeftRank + newLeftRank;
     this->left = new_left;
+    this->rank = newRank;
 }
 
 template <class T>
@@ -66,7 +71,11 @@ void avlNode<T>::setRight(avlNode<T> *new_right)
 {
     if (new_right)
         new_right->setParent(this);
+    int oldRightRank = right->getRank();
+    int newRightRank = new_right->getRank();
+    int newRank = getRank()-oldRightRank+newRightRank;
     this->right = new_right;
+    this->rank = newRank;
 }
 
 template <class T>
@@ -106,6 +115,7 @@ void avlNode<T>::copyFrom(avlNode<T> *node)
 {
     this->setRight(node->getRight());
     this->setLeft(node->getLeft());
+    this->rank = node->getRank();
     if (node->getParent())
     {
         if (node->isLeftChild())
@@ -132,6 +142,7 @@ void avlNode<T>::swapWithChild(avlNode<T> *node, bool is_right)
     avlNode<T> *temp_right = node->getRight();
     avlNode<T> *temp_left = node->getLeft();
     avlNode<T> *temp_this_left = this->getLeft();
+    int myRank=rank, rightRank=getRight()->getRank(), leftRank=getLeft()->getRank();
     if (is_right)
     {
         // std::cout << "Is RIGHT!" << std::endl;
@@ -149,8 +160,9 @@ void avlNode<T>::swapWithChild(avlNode<T> *node, bool is_right)
         }
         else
             node->setParent(NULL);
-
+        rank = rightRank;
         node->setRight(this);
+        node->rank = myRank;
         this->setRight(temp_right);
         this->setLeft(temp_left);
     }
@@ -171,8 +183,9 @@ void avlNode<T>::swapWithChild(avlNode<T> *node, bool is_right)
         }
         else
             node->setParent(NULL);
-
+        rank = leftRank;
         node->setLeft(this);
+        node->rank = myRank;
         this->setRight(temp_right);
         this->setLeft(temp_left);
     }
@@ -199,6 +212,12 @@ template <class T>
 int avlNode<T>::getHeight()
 {
     return this->height;
+}
+
+template <class T>
+int avlNode<T>::getRank()
+{
+    return this->rank;
 }
 
 #endif

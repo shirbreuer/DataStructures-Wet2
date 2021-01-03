@@ -16,10 +16,8 @@ class avlTree
 {
 private:
     avlNode<T> *root;
-
     avlNode<T> *largest;
     avlNode<T> *first; //is it equal to smallest?
-
     avlTreeResult_t insertAvlNode(avlNode<T> *root, avlNode<T> *new_node);
     avlTreeResult_t removeAvlNode(avlNode<T> *root, avlNode<T> *new_node);
 
@@ -39,17 +37,14 @@ public:
     int nonRecursiveInOrder(int m, void (*function)(avlNode<T> *, int *, int *, int *, int), int *courses, int *classes) const;
     void preOrder(avlNode<T> *root, void (*function)(avlNode<T> *)) const;  // this, Left, Right
     void postOrder(avlNode<T> *root, void (*function)(avlNode<T> *)) const; // Left, Right, this
-
     int reverseInOrder(int m, void (*function)(avlNode<T> *)) const;
     int reverseInOrder(int m, void (*function)(avlNode<T> *, int *, int *, int), int *courses, int *classes) const;
-
     avlNode<T> *findNewRoot(avlNode<T> *newroot);
     void rootUpdate(avlNode<T> *newroot);
     void updateLargest(avlNode<T> *root);
     void updateFirst(avlNode<T> *root);
     avlNode<T> *getLargest();
     avlNode<T> *getFirst();
-
     void recursiveSetHeight(avlNode<T> *node);
     void removeLeaf(avlNode<T> *node);
     void removeNodeOneChild(avlNode<T> *node, bool is_right_child);

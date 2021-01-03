@@ -15,6 +15,7 @@ private:
     avlNode *right;
     avlNode *parent;
     int height;
+    int rank=0;
 
 public:
     avlNode() = default;
@@ -33,6 +34,7 @@ public:
     void setHeight();
     void print() const;
     int getHeight();
+    int getRank();
     bool isLeftChild();
     bool isRightChild();
 
