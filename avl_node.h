@@ -15,7 +15,7 @@ private:
     avlNode *right;
     avlNode *parent;
     int height;
-    int rank=0;
+    int rank;
 
 public:
     avlNode() = default;
@@ -31,7 +31,7 @@ public:
     void setLeft(avlNode<T> *new_left);
     void setRight(avlNode<T> *new_right);
     void setParent(avlNode<T> *new_parent);
-    void setHeight();
+    void setHeightAndRank();
     void print() const;
     int getHeight();
     int getRank();

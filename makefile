@@ -11,7 +11,7 @@ DEBUG_FLAG = -DNDEBUG
 $(EXEC): $(OBJS)
 	$(CXX) $(DEBUG_FLAG) $(OBJS) -o $@
 
-main.o: main.cpp library.h
+main.o: main.cpp avl_tree.h avl_tree.hpp avl_node.h avl_node.hpp
 	$(CXX) -c $(COMP_FLAG) $(DEBUG_FLAG) $*.cpp
 
 class_node.o: class_node.cpp class_node.h avl_node.h
