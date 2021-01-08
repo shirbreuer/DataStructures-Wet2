@@ -133,8 +133,8 @@ void hashTable<T>::updateLoadFactor()
 }
 
 /**
- * @brief wrapper function for resizing the table
- * 
+ * @brief wrapper function for resizing the table &#160;
+ * asdasdasd
  * @param size_change (1) if increasing, (-1) if decreasing
  */
 template <class T>
@@ -250,5 +250,7 @@ void hashTable<T>::transfer(const T &element, int (*function)(int))
         *(hash_array + hashedIndex) = new twList<T>();
     *(hash_array + hashedIndex)->addFirst(element);
 }
+
+
 
 #endif

@@ -165,7 +165,7 @@ template <class T>
 twListNode<T>* twList<T>::contains(const T &element)
 {
     twListNode<T> *iter = this->getHead();
-    while (iter != tw_list.getTail())
+    while (iter != this->getTail())
     {
         if (iter->getValue() == element.getKey())
             return iter;
