@@ -161,18 +161,18 @@ twList<T>::twList(const twList &tw_list) : head(tw_list.head.clone()), tail(tw_l
     this->key = tw_list.key;
 }
 
-template <class T>
-twListNode<T>* twList<T>::contains(const T &element)
-{
-    twListNode<T> *iter = this->getHead();
-    while (iter != this->getTail())
-    {
-        if (iter->getValue() == element.getKey())
-            return iter;
-        iter = iter->getNext();
-    }
-    return nullptr;
-}
+// template <class T>
+// twListNode<T>* twList<T>::contains(const T &element)
+// {
+//     twListNode<T> *iter = this->getHead();
+//     while (iter != this->getTail())
+//     {
+//         if (iter->getValue() == element.getKey())
+//             return iter;
+//         iter = iter->getNext();
+//     }
+//     return nullptr;
+// }
 
 template <class T>
 twList<T>::~twList()
