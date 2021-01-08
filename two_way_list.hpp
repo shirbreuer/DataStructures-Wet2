@@ -165,7 +165,7 @@ twList<T>::twList(const twList &tw_list) : head(tw_list.head.clone()), tail(tw_l
 // twListNode<T>* twList<T>::contains(const T &element)
 // {
 //     twListNode<T> *iter = this->getHead();
-//     while (iter != tw_list.getTail())
+//     while (iter != this->getTail())
 //     {
 //         if (iter->getValue() == element.getKey())
 //             return iter;
