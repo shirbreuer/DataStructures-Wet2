@@ -50,7 +50,7 @@ public:
     avlNode<T> *getLargest();
     avlNode<T> *getFirst();
 
-    void recursiveSetHeight(avlNode<T> *node);
+    void recursiveSetHeightAndRank(avlNode<T> *node);
     void removeLeaf(avlNode<T> *node);
     void removeNodeOneChild(avlNode<T> *node, bool is_right_child);
     void eraseAndBalance(avlNode<T> *node);

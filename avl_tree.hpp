@@ -72,6 +72,13 @@ void printHeight(avlNode<T> *root)
 }
 
 template <class T>
+void printRank(avlNode<T> *root)
+{
+    if (root)
+        std::cout << root->getRank() << " ";
+}
+
+template <class T>
 void printTreeStatus(avlTree<T> *tree)
 {
     if (tree->getRoot())
@@ -108,7 +115,7 @@ avlTreeResult_t avlTree<T>::insert(T *const value)
     if (!root)
     { // Special case
         root = new_node;
-        root->setHeight();
+        root->setHeightAndRank();
         largest = new_node;
         first = new_node;
         return AVL_TREE_SUCCESS;
@@ -407,7 +414,7 @@ avlTreeResult_t avlTree<T>::insertAvlNode(avlNode<T> *root, avlNode<T> *new_node
         if (root->getLeft())
         { // If there is a left child, keep searching
             avlTreeResult_t result = insertAvlNode(root->getLeft(), new_node);
-            root->setHeight();
+            root->setHeightAndRank();
             return result;
         }
         else
@@ -415,9 +422,9 @@ avlTreeResult_t avlTree<T>::insertAvlNode(avlNode<T> *root, avlNode<T> *new_node
             // std::cout << "SPOT FOR: " << new_node->getValue() << std::endl;
             root->setLeft(new_node);
             // new_node->setParent(root);
-            new_node->setHeight();
+            new_node->setHeightAndRank();
             // std::cout << "new node height: " << new_node->getHeight() << std::endl;
-            root->setHeight();
+            root->setHeightAndRank();
             return AVL_TREE_SUCCESS;
         }
     }
@@ -426,7 +433,7 @@ avlTreeResult_t avlTree<T>::insertAvlNode(avlNode<T> *root, avlNode<T> *new_node
         if (root->getRight())
         { // If there is a right child, keep searching
             avlTreeResult_t result = insertAvlNode(root->getRight(), new_node);
-            root->setHeight();
+            root->setHeightAndRank();
             // std::cout << "Root is: " << root->getValue() << " and it's height is: " << root->getHeight() << std::endl;
             return result;
         }
@@ -434,8 +441,8 @@ avlTreeResult_t avlTree<T>::insertAvlNode(avlNode<T> *root, avlNode<T> *new_node
         { // Found the right spot
             root->setRight(new_node);
             // new_node->setParent(root);
-            new_node->setHeight();
-            root->setHeight();
+            new_node->setHeightAndRank();
+            root->setHeightAndRank();
             return AVL_TREE_SUCCESS;
         }
     }
@@ -491,16 +498,16 @@ void avlTree<T>::rotateLeft(avlNode<T> *sub_root)
         }
     }
     newroot->setLeft(sub_root);
-    this->recursiveSetHeight(sub_root);
+    this->recursiveSetHeightAndRank(sub_root);
     // std::cout << sub_root->getValue() << "'s new parent is: " << newroot->getValue() << std::endl;
 }
 
 template <class T>
-void avlTree<T>::recursiveSetHeight(avlNode<T> *node)
+void avlTree<T>::recursiveSetHeightAndRank(avlNode<T> *node)
 {
     while (node)
     {
-        node->setHeight();
+        node->setHeightAndRank();
         node = node->getParent();
     }
 }
@@ -532,7 +539,7 @@ void avlTree<T>::rotateRight(avlNode<T> *sub_root)
         }
     }
     newroot->setRight(sub_root);
-    this->recursiveSetHeight(sub_root);
+    this->recursiveSetHeightAndRank(sub_root);
 
     // std::cout << sub_root->getValue() << "'s new parent is: " << newroot->getValue() << std::endl;
 }

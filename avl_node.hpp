@@ -181,12 +181,17 @@ void avlNode<T>::swapWithChild(avlNode<T> *node, bool is_right)
 }
 
 template <class T>
-void avlNode<T>::setHeight()
-{
-    int left = this->getLeft() ? this->getLeft()->getHeight() : -1;
-    int right = this->getRight() ? this->getRight()->getHeight() : -1;
-    this->height = 1 + ((left > right) ? left : right);
-}
+void avlNode<T>::setHeightAndRank()
+    {
+    int leftHeight = this->getLeft() ? this->getLeft()->getHeight() : -1;
+    int rightHeight = this->getRight() ? this->getRight()->getHeight() : -1;
+    int leftRank = this->getLeft() ? this->getLeft()->getRank() : 0;
+    int rightRank = this->getRight() ? this->getRight()->getRank() : 0;
+    this->height = 1 + ((leftHeight > rightHeight) ? leftHeight : rightHeight);
+    this->rank = 1 + leftRank + rightRank;
+    }
+
+
 
 template <class T>
 void avlNode<T>::print() const
@@ -200,5 +205,12 @@ int avlNode<T>::getHeight()
 {
     return this->height;
 }
+
+template <class T>
+int avlNode<T>::getRank()
+{
+    return this->rank;
+}
+
 
 #endif
