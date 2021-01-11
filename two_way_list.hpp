@@ -161,22 +161,23 @@ twList<T>::twList(const twList &tw_list) : head(tw_list.head.clone()), tail(tw_l
     this->key = tw_list.key;
 }
 
-// template <class T>
-// twListNode<T>* twList<T>::contains(const T &element)
-// {
-//     twListNode<T> *iter = this->getHead();
-//     while (iter != this->getTail())
-//     {
-//         if (iter->getValue() == element.getKey())
-//             return iter;
-//         iter = iter->getNext();
-//     }
-//     return nullptr;
-// }
+template <class T>
+twListNode<T>* twList<T>::contains(const T &element)
+{
+    twListNode<T> *iter = this->getHead();
+    while (iter != this->getTail())
+    {
+        if (iter->getValue() == element)
+            return iter;
+        iter = iter->getNext();
+    }
+    return nullptr;
+}
 
 template <class T>
 twList<T>::~twList()
 {
+    // std::cout << "emptying list" << std::endl;
     twListNode<T> *from = head;
     while ((*from).getNext() != tail)
     {
@@ -274,13 +275,10 @@ const int twList<T>::size() const
 template <class T>
 twListResult_t twList<T>::addFirst(const T &to_add)
 {
+    // std::cout << "trying to add first to list " << std::endl;
     if (!this)
-    {
         return TW_LIST_FAILURE;
-    }
-    //    if (!to_add){
-    //        return TW_LIST_INVALID_INPUT;
-    //    }
+
     twListNode<T> *curr_first = head->getNext();
     twListNode<T> *new_node = new twListNode<T>(to_add, head, curr_first);
     if (!new_node)
@@ -290,6 +288,7 @@ twListResult_t twList<T>::addFirst(const T &to_add)
     head->setNext(new_node);
     (*curr_first).setPrev(new_node);
     num_of_nodes++;
+    // std::cout << num_of_nodes << std::endl;
     return TW_LIST_SUCCESS;
 }
 
@@ -360,7 +359,7 @@ std::string twList<T>::printList()
     for (int i = 0; i < num_of_nodes; i++)
     {
         it = (*it).getNext();
-        list_str += std::to_string((*it).getVal());
+        list_str += std::to_string((*it).getValue());
         if (i != num_of_nodes - 1)
         {
             list_str += " - ";

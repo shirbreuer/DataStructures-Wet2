@@ -1,26 +1,25 @@
 #include "data_structure.h"
 
-courseManager::courseManager() : courses(new avlTree<courseNode>()), classes(new avlTree<classNode>()),
-                                 lists(new avlTree<twList<int>>()) {}
+courseManager::courseManager() : courses(new hashTable<courseNode>()), classes(new avlTree<classNode>())
+{
+}
 
 courseManager::~courseManager()
 {
     delete courses;
     delete classes;
-    delete lists;
 }
 
-StatusType courseManager::AddCourse(int courseID, int numOfClasses)
+StatusType courseManager::AddCourse(int courseID)
 {
-    if (courseID <= 0 || numOfClasses <= 0)
-    {
+    if (courseID <= 0)
         return INVALID_INPUT;
-    }
-    courseNode *new_course = new courseNode(courseID, numOfClasses);
+
+    courseNode *new_course = new courseNode(courseID);
     if (!new_course)
-        return (StatusType)AVL_TREE_OUT_OF_MEMORY;
-    avlTreeResult_t insert_result = this->getCourses()->insert(new_course);
-    if (insert_result != AVL_TREE_SUCCESS)
+        return (StatusType)HASH_TABLE_OUT_OF_MEMORY;
+    hashTableResult insert_result = getCourses()->add(*new_course, hashFunctionDS);
+    if (insert_result != HASH_TABLE_SUCCESS)
     {
         return (StatusType)insert_result;
     }
@@ -157,7 +156,7 @@ StatusType courseManager::replaceClass(avlNode<classNode> *ptr, int courseID, in
     }
     else
     {
-        classNode *new_class = new classNode(ptr->getValue()->getCourseId(), ptr->getValue()->getClassId(), /*(avlNode<courseNode> *)*/ptr->getValue()->getParentPointer(), ptr->getValue()->getTime() + time);
+        classNode *new_class = new classNode(ptr->getValue()->getCourseId(), ptr->getValue()->getClassId(), /*(avlNode<courseNode> *)*/ ptr->getValue()->getParentPointer(), ptr->getValue()->getTime() + time);
         if (!new_class)
             return (StatusType)AVL_TREE_OUT_OF_MEMORY;
         avlTreeResult_t remove_old_class_result = this->getClasses()->remove((ptr->getValue()));
@@ -214,4 +213,14 @@ StatusType courseManager::GetMostViewedClasses(int numOfClasses, int *courses, i
 
     this->getLists()->nonRecursiveInOrder(classes_with_zero_views, copyEmptyClassesToArray, courses + numOfClasses - classes_with_zero_views, classes + numOfClasses - classes_with_zero_views);
     return SUCCESS;
+}
+
+int static hashFunctionDS(int num, int size = 16)
+{
+    return num%size;
+}
+
+int static hashFunctionDS(courseNode course, int size = 16)
+{
+    return course.getId()%size;
 }

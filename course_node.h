@@ -4,6 +4,7 @@
 #include "class_node.h"
 #include "two_way_list.hpp"
 #include "two_way_list_node.hpp"
+#include "hash_table.hpp"
 
 typedef enum CourseStatus_t
 {
@@ -20,13 +21,14 @@ private:
     int course_id;
     int num_of_classes;
     avlNode<classNode>** classes_pointers_array;
-    twListNode<int>** zero_views_node_pointers;
-    twList<int>* zero_views_classes;
+    hashTable<avlNode<classNode>*>* classes_pointers_hashtable;
+    // twListNode<int>** zero_views_node_pointers;
+    // twList<int>* zero_views_classes;
 
 public:
     courseNode();
     courseNode(const courseNode& other);
-    courseNode(const int courseID, const int numOfClasses);
+    courseNode(const int courseID);
     ~courseNode();
     avlNode<classNode>* getClass(const int classID);
     bool operator<(const courseNode& courseToCompare) const;
@@ -44,9 +46,9 @@ public:
     avlNode<classNode>* const getClassPointer(int classID) const { return *(this->classes_pointers_array+classID);}
     avlNode<classNode>** getPointersArray() { return this->classes_pointers_array;}
     avlNode<classNode>** const getPointersArray() const { return this->classes_pointers_array;}
-    twListNode<int>* getClassNodePointer(int classID) { return *(this->zero_views_node_pointers+classID);}
-    twListNode<int>*  const getClassNodePointer(int classID) const { return *(this->zero_views_node_pointers+classID);}
-    twList<int>* getList() { return this->zero_views_classes; }
+    // twListNode<int>* getClassNodePointer(int classID) { return *(this->zero_views_node_pointers+classID);}
+    // twListNode<int>*  const getClassNodePointer(int classID) const { return *(this->zero_views_node_pointers+classID);}
+    // twList<int>* getList() { return this->zero_views_classes; }
     CourseStatus setClassPointer(int classID, avlNode<classNode>* class_ptr);
 
 };

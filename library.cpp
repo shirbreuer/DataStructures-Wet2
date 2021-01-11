@@ -12,10 +12,10 @@ void *Init()
     return (void *)DS;
 }
 
-StatusType AddCourse(void *DS, int courseID, int numOfClasses)
+StatusType AddCourse(void *DS, int courseID)
 {
     DataStructureIsValid(DS);
-    return (((courseManager *)DS)->AddCourse(courseID, numOfClasses));
+    return (((courseManager *)DS)->AddCourse(courseID);
 }
 StatusType RemoveCourse(void *DS, int courseID)
 {

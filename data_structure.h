@@ -8,6 +8,8 @@
 #include "library.h"
 #include "two_way_list.hpp"
 #include "two_way_list_node.hpp"
+#include "hash_table.hpp"
+
 
 class classNode;
 class courseNode;
@@ -15,22 +17,22 @@ class courseNode;
 class courseManager
 {
 private:
-    avlTree<courseNode>* courses;
+    hashTable<courseNode>* courses;
     avlTree<classNode>* classes;
-    avlTree<twList<int>>* lists;
+    // avlTree<twList<int>>* lists;
     int classes_counter = 0;
 
 public:
     courseManager();
     ~courseManager();
-    StatusType AddCourse(int courseID, int numOfClasses);
+    StatusType AddCourse(int courseID);
     StatusType RemoveCourse(int courseID);
     StatusType WatchClass(int courseID, int classID, int time);
     StatusType TimeViewed(int courseID, int classID, int *timeViewed);
     StatusType GetMostViewedClasses(int numOfClasses, int *courses, int *classes);
-    avlTree<courseNode>* getCourses() { return this->courses; }
+    hashTable<courseNode>* getCourses() { return this->courses; }
     avlTree<classNode>* getClasses() { return this->classes; }
-    avlTree<twList<int>>* getLists() { return this->lists; }
+    // avlTree<twList<int>>* getLists() { return this->lists; }
     void Quit(void **DS);
     StatusType replaceClass(avlNode<classNode> *ptr, int courseID, int classID, int time, avlNode<courseNode> *course);
 };

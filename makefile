@@ -1,9 +1,9 @@
 CXX = g++
 EXEC = DS
 OBJS = main.o class_node.o course_node.o data_structure.o library.o #avl_node.o avl_tree.o
-HFLS = avl_node.h avl_tree.h class_node.h course_node.h data_structure.h  #library.h
+HFLS = avl_node.h avl_tree.h class_node.h course_node.h data_structure.h hash_table.h #library.h
 CPPFLS = class_node.cpp course_node.cpp data_structure.cpp #library.cpp main.cpp
-HPPFLS = avl_node.hpp avl_tree.hpp two_way_list.hpp two_way_list_node.hpp
+HPPFLS = avl_node.hpp avl_tree.hpp two_way_list.hpp two_way_list_node.hpp hash_table.hpp
 MISCFLS = design.pdf submissions.txt
 COMP_FLAG = -std=c++11  -Wall -g #-Werror -pedantic-errors  -g -fPIC
 DEBUG_FLAG = -DNDEBUG
@@ -20,7 +20,7 @@ class_node.o: class_node.cpp class_node.h avl_node.h
 course_node.o: course_node.cpp course_node.h avl_node.h avl_node.hpp class_node.h two_way_list.hpp two_way_list_node.hpp avl_tree.h library.h #data_structure.h
 	$(CXX) -c $(COMP_FLAG) $(DEBUG_FLAG) $*.cpp
 
-data_structure.o: data_structure.cpp data_structure.h avl_tree.h avl_tree.hpp avl_node.h class_node.h course_node.h two_way_list.hpp two_way_list_node.hpp library.h
+data_structure.o: data_structure.cpp data_structure.h hash_table.h hash_table.hpp avl_tree.h avl_tree.hpp avl_node.h class_node.h course_node.h two_way_list.hpp two_way_list_node.hpp library.h
 	$(CXX) -c $(COMP_FLAG) $(DEBUG_FLAG) $*.cpp
 
 library.o: library.cpp library.h data_structure.h avl_tree.h avl_tree.hpp avl_node.h class_node.h course_node.h two_way_list.hpp two_way_list_node.hpp
@@ -30,7 +30,10 @@ library.o: library.cpp library.h data_structure.h avl_tree.h avl_tree.hpp avl_no
 # 	ar -rs $@ $^
 
 test:
-	make 
+	make clean
+	make
+	clear
+	./DS
 
 tar:  $(HFLS) $(CPPFLS) $(HPPFLS) $(MISCFLS)
 	zip Wet1.zip $(EXEC) $(HFLS) $(CPPFLS) $(HPPFLS) $(MISCFLS)
@@ -47,11 +50,14 @@ final: $(HFLS) $(CPPFLS) test_in.txt test_out.txt Makefile design.pdf libgraph.a
 clean:
 	rm -f $(OBJS) $(EXEC)
 
+eval:
+	valgrind --leak-check=full ./DS
+
 val:
-	valgrind --leak-check=full --track-origins=yes ./DS < in1.txt > out1.txt
+	valgrind --leak-check=full --track-origins=yes ./DS # < in1.txt > out1.txt
 
 valv:
-	valgrind --leak-check=full --track-origins=yes ./DS < in1.txt > out1.txt
+	valgrind --leak-check=full -v --track-origins=yes ./DS # < in1.txt > out1.txt
 
 call:
 	valgrind --tool=callgrind ./gcalc test.in test.out

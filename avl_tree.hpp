@@ -223,12 +223,12 @@ void avlTree<T>::removeNodeWithParent(avlNode<T> *node_to_remove)
     }
     if (is_right)
     {
-        recursiveSetHeight(parent->getRight());
+        recursiveSetHeightAndRank(parent->getRight());
         treeBalance(parent->getRight());
     }
     else
     {
-        recursiveSetHeight(parent->getRight());
+        recursiveSetHeightAndRank(parent->getRight());
         treeBalance(parent->getLeft());
     }
 }

@@ -9,7 +9,7 @@
 #define DEFAULT_LOWER_FACTOR 0.25f
 #define INCREASE_SIZE 1
 #define DECREASE_SIZE -1
-#define MIN_HASH_TABLE_SIZE 1
+#define MIN_HASH_TABLE_SIZE 16
 #define INITIAL_SIZE 0
 #define INITIAL_FACTOR 0
 #define HASH_TABLE_CHANGE 2
@@ -37,7 +37,7 @@ class hashTable
 
 public:
     hashTable();
-    hashTable(int low_factor, int high_factor);
+    hashTable(float low_factor, float high_factor);
     ~hashTable();
 
     //getters
@@ -56,19 +56,30 @@ public:
     void setFactor(float new_factor) { this->load_factor = new_factor; }
     void setArray(twList<T> **new_table) { this->hash_array = new_table; }
 
+    hashTableResult add(const T &element, int (*function)(T, int));
+    hashTableResult remove(const T &element, int (*function)(T, int));
+    twListNode<T> *find(const T &element, int (*function)(T, int));
 
-    hashTableResult add(const T& element, int (*function)(int));
-    hashTableResult remove(const T& element, int (*function)(int));
-    twListNode<T>* find(const T& element, int (*function)(int));
-    
-    
-    
     void resize(int size_change);
     bool resizeRequired(int size_change);
     void updateLoadFactor();
-    void transfer(const T &element, int (*function)(int));
+    void transfer(const T &element, int (*function)(T, int));
 
     void hashSetNullptr(int size);
-    int hashFunction(int key) { return key % size; };
+    // int hashFunction(int key) { return key % size; };
+    // int hashFunction(const T &element) { return element.getKey() % size; };
 };
+
+template<class T>
+int hashFunction(const T &element, int size)
+{
+    return element.getKey() % size;
+}
+
+
+int hashFunction(int key, int size)
+{
+    return key % size;
+}
+
 #endif
