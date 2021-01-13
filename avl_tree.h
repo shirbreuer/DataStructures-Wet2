@@ -33,7 +33,8 @@ public:
     void rotateLeft(avlNode<T> *root);
     void rotateRight(avlNode<T> *root);
     void cleanTree();
-    avlNode<T> *getRoot() const { return this->root; }
+    avlNode<T>* getRoot() const { return this->root; }
+    avlNode<T>* select (int k);
     void inOrder(avlNode<T> *root, void (*function)(avlNode<T> *)) const; // Left, this, Right
     int nonRecursiveInOrder(int m, void (*function)(avlNode<T> *)) const; // Left, this, Right
     int nonRecursiveInOrder(int m, void (*function)(avlNode<T> *, int *, int *, int *, int), int *courses, int *classes) const;
