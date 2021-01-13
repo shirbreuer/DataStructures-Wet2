@@ -36,11 +36,11 @@ int main(){
             // if (c != b->getCapacity())
                 // std::cout << std:: endl << "New capacity: " << b->getCapacity() << std:: endl;
         }
-    for (int i = 0; i < 1500; i++)
-        {
-            // std::cout << i << "           ";
-            b->remove(8+16*i, hash);
-        }
+    // for (int i = 0; i < 1500; i++)
+    //     {
+    //         // std::cout << i << "           ";
+    //         b->remove(8+16*i, hash);
+    //     }
     // b->add(8, hash);
     // b->add(24, hash);
     // b->add(40, hash);

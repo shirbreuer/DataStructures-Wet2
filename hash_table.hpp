@@ -98,7 +98,7 @@ hashTableResult hashTable<T>::add(const T &element, int (*function)(T, int))
 }
 
 /**
- * @brief Add new element to the table if it is not already in it.
+ * @brief search for element in hash table
  * @tparam T 
  * @param element element to search in the table
  * @param function hash function to perform
@@ -114,6 +114,25 @@ twListNode<T> *hashTable<T>::find(const T &element, int (*function)(T, int))
         return nullptr;
     return (*(hash_array + hashedIndex))->contains(element);
 }
+
+/**
+ * @brief Add new element to the table if it is not already in it.
+ * @tparam T 
+ * @param key key to search in the table
+ * @param function hash function to perform
+ * @return twListNode<T>* 
+ */
+template <class T>
+twListNode<T> *hashTable<T>::find(const int key, int (*function)(int, int))
+{
+    // std::cout << "trying to find" << std::endl;
+    int hashedIndex = function(key, this->getCapacity());
+    // std::cout << (*(hash_array + hashedIndex) ? "123" : "0") << std::endl;
+    if (*(hash_array + hashedIndex) == nullptr) //no list
+        return nullptr;
+    return (*(hash_array + hashedIndex))->contains(key);
+}
+
 
 
 
