@@ -94,10 +94,22 @@ StatusType courseManager::AddClass(int courseID, int *classID)
     twListNode<courseNode> *course_pointer = this->getCourses()->find(courseID, hashFunction);
     if (!course_pointer)
         return FAILURE;
-    int current_courses_number = course_pointer->getValue().getNumOfClasses();
+    int curr_class_count = course_pointer->getValue().getNumOfClasses();
+    classNode* new_class_pointer = new classNode(courseID, curr_class_count);
+    if (!new_class_pointer)
+        return (StatusType)HASH_TABLE_OUT_OF_MEMORY;
+    avlNode<classNode>* new_avl_node = new avlNode<classNode>(new_class_pointer);
+    if (!new_avl_node) {
+        delete new_class_pointer;
+        return (StatusType)HASH_TABLE_OUT_OF_MEMORY;
+    }
 
-
-    return (StatusType);
+    StatusType return_result = (StatusType)course_pointer->getValue().setClassPointer(curr_class_count, new_avl_node);
+    if (return_result == SUCCESS) {
+        course_pointer->getValue().setNumOfClasses(curr_class_count+1);
+        *classID = curr_class_count+1;
+    }
+    return return_result;
 }
 
 StatusType courseManager::TimeViewed(int courseID, int classID, int *timeViewed)
@@ -105,21 +117,16 @@ StatusType courseManager::TimeViewed(int courseID, int classID, int *timeViewed)
     if (courseID <= 0 || classID < 0)
         return INVALID_INPUT;
 
-    courseNode new_course;
-    new_course.setId(courseID);
-    avlNode<courseNode> *wanted_course = find(this->getCourses()->getRoot(), &new_course);
-    if (!wanted_course)
+    twListNode<courseNode> *course_pointer = this->getCourses()->find(courseID, hashFunction);
+    if (!course_pointer)
         return FAILURE;
 
-    int num_of_classes = wanted_course->getValue()->getNumOfClasses();
-    if (classID + 1 > num_of_classes)
+    int classes_num = course_pointer->getValue().getNumOfClasses();
+    if (classID + 1 > classes_num)
         return INVALID_INPUT;
 
-    avlNode<classNode> *ptr = wanted_course->getValue()->getClassPointer(classID);
-    if (!ptr)
-        *timeViewed = 0;
-    else
-        *timeViewed = ptr->getValue()->getTime();
+    avlNode<classNode> *class_pointer = course_pointer->getValue().getClass(classID);
+    *timeViewed = class_pointer->getValue()->getTime();
 
     return SUCCESS;
 }

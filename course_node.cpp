@@ -40,7 +40,7 @@ int static hashFunctionDS(int num, int size = 16)
     return num%size;
 }
 
-int static hashFunctionAvlNode(avlNode<classNode> *class_pointer, int size = 16)
+int stati hashFunctionAvlNode(avlNode<classNode> *class_pointer, int size = 16)
 {
     return class_pointer->getValue()->getClassId()%size;
 }

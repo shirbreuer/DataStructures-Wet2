@@ -6,6 +6,7 @@
 #include "two_way_list_node.hpp"
 #include "hash_table.hpp"
 
+
 typedef enum CourseStatus_t
 {
     COURSE_ALLOCATION_ERROR = -2,
