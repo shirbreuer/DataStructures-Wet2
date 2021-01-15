@@ -30,22 +30,6 @@ courseNode::~courseNode()
 }
 
 
-int static hashFunctionCourseNode(courseNode course, int size = 16)
-{
-    return course.getId()%size;
-}
-
-int static hashFunctionDS(int num, int size = 16)
-{
-    return num%size;
-}
-
-int stati hashFunctionAvlNode(avlNode<classNode> *class_pointer, int size = 16)
-{
-    return class_pointer->getValue()->getClassId()%size;
-}
-
-
 void courseNode::setId(int new_id)
 {
     this->course_id = new_id;
@@ -58,40 +42,40 @@ void courseNode::setNumOfClasses(int numOfClasses)
 avlNode<classNode> *courseNode::getClass(const int classID) const
 {
     if (classID > num_of_classes)
-        return nullptr;
+        return NULL;
 
-    return this->classes_pointers_hashtable->find(classID, hashFunctionDS)->getValue();
+    return this->classes_pointers_hashtable->find(classID)->getValue();
 }
 
 CourseStatus courseNode::setClassPointer(int classID, avlNode<classNode> *class_ptr)
 {
     if (!class_ptr)
         return COURSE_FAILURE;
-    return (CourseStatus)this->classes_pointers_hashtable->add(class_ptr, hashFunctionAvlNode);
+    return (CourseStatus)this->classes_pointers_hashtable->add(class_ptr);
 }
 
 bool courseNode::operator<(const courseNode& courseToCompare) const
 {
-    return this->course_id < courseToCompare.getId();
+    return this->course_id < courseToCompare.getKey();
 }
 
 bool courseNode::operator!() const
 {
-    if (getId())
+    if (getKey())
         return false;
     return true;
 }
 
 bool courseNode::operator==(const courseNode& courseToCompare) const
 {
-    return this->course_id == courseToCompare.getId();
+    return this->course_id == courseToCompare.getKey();
 }
 
 bool courseNode::operator<=(const courseNode& courseToCompare) const
 {
-    return this->course_id <= courseToCompare.getId();
+    return this->course_id <= courseToCompare.getKey();
 }
 bool courseNode::operator>(const courseNode& courseToCompare) const
 {
-    return (this->course_id > courseToCompare.getId());
+    return (this->course_id > courseToCompare.getKey());
 }

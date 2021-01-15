@@ -22,6 +22,7 @@ typedef enum hashTableResult_t
     HASH_TABLE_FAILURE = -1
 } hashTableResult;
 
+
 template <class T>
 class hashTable
 {
@@ -56,31 +57,18 @@ public:
     void setFactor(float new_factor) { this->load_factor = new_factor; }
     void setArray(twList<T> **new_table) { this->hash_array = new_table; }
 
-    hashTableResult add(const T &element, int (*function)(T, int));
-    hashTableResult remove(const T &element, int (*function)(T, int));
-    twListNode<T> *find(const T &element, int (*function)(T, int));
-    twListNode<T> *find(const int key, int (*function)(int, int));
+    hashTableResult add(const T &element);
+    hashTableResult remove(const T &element);
+    twListNode<T> *find(const T &element);
+    twListNode<T> *find(const int key);
 
     void resize(int size_change);
     bool resizeRequired(int size_change);
     void updateLoadFactor();
-    void transfer(const T &element, int (*function)(T, int));
+    void transfer(const T &element);
 
     void hashSetNullptr(int size);
-    // int hashFunction(int key) { return key % size; };
-    // int hashFunction(const T &element) { return element.getKey() % size; };
 };
 
-template<class T>
-int hashFunction(const T &element, int size)
-{
-    return element.getKey() % size;
-}
-
-
-int hashFunction(int key, int size)
-{
-    return key % size;
-}
 
 #endif

@@ -75,21 +75,20 @@ void hashTable<T>::hashSetNullptr(int size)
  * Add new element to the table if it is not already in it.
  * @tparam T
  * @param element element to add to the table
- * @param function hash function to perform
  * @returns hashTableResult
 */
 template <class T>
-hashTableResult hashTable<T>::add(const T &element, int (*function)(T, int))
+hashTableResult hashTable<T>::add(const T &element)
 {
     // std::cout <<"trying to add" << std::endl;
-    if (find(element, function) != nullptr)
+    if (find(element) != nullptr)
         return HASH_TABLE_FAILURE;
     // std::cout <<"not found" << std::endl;
 
     this->size++;
     updateLoadFactor();
     resize(INCREASE_SIZE);
-    int hashedIndex = function(element, this->getCapacity());
+    int hashedIndex = element.getKey()%this->getCapacity();
     if (*(hash_array + hashedIndex) == nullptr)
         *(hash_array + hashedIndex) = new twList<T>();
     (*(hash_array + hashedIndex))->addFirst(element);
@@ -101,14 +100,13 @@ hashTableResult hashTable<T>::add(const T &element, int (*function)(T, int))
  * @brief search for element in hash table
  * @tparam T 
  * @param element element to search in the table
- * @param function hash function to perform
  * @return twListNode<T>* 
  */
 template <class T>
-twListNode<T> *hashTable<T>::find(const T &element, int (*function)(T, int))
+twListNode<T> *hashTable<T>::find(const T &element)
 {
     // std::cout << "trying to find" << std::endl;
-    int hashedIndex = function(element, this->getCapacity());
+    int hashedIndex = element.getKey()%this->getCapacity();
     // std::cout << (*(hash_array + hashedIndex) ? "123" : "0") << std::endl;
     if (*(hash_array + hashedIndex) == nullptr) //no list
         return nullptr;
@@ -119,14 +117,13 @@ twListNode<T> *hashTable<T>::find(const T &element, int (*function)(T, int))
  * @brief Add new element to the table if it is not already in it.
  * @tparam T 
  * @param key key to search in the table
- * @param function hash function to perform
  * @return twListNode<T>* 
  */
 template <class T>
-twListNode<T> *hashTable<T>::find(const int key, int (*function)(int, int))
+twListNode<T> *hashTable<T>::find(const int key)
 {
     // std::cout << "trying to find" << std::endl;
-    int hashedIndex = function(key, this->getCapacity());
+    int hashedIndex = key%this->getCapacity();
     // std::cout << (*(hash_array + hashedIndex) ? "123" : "0") << std::endl;
     if (*(hash_array + hashedIndex) == nullptr) //no list
         return nullptr;
@@ -140,18 +137,17 @@ twListNode<T> *hashTable<T>::find(const int key, int (*function)(int, int))
  * @brief delete element from the table if the table contains this element.
  * @tparam T
  * @param element element to remove from the table
- * @param function hash function to perform
  * @returns hashTableResult
 */
 template <class T>
-hashTableResult hashTable<T>::remove(const T &element, int (*function)(T, int))
+hashTableResult hashTable<T>::remove(const T &element)
 {
-    twListNode<T>* element_node_to_remove = find(element, function);
+    twListNode<T>* element_node_to_remove = find(element);
     if (element_node_to_remove == nullptr)
         return HASH_TABLE_FAILURE;
     this->size--;
     updateLoadFactor();
-    int hashedIndex = function(element, this->getCapacity());
+    int hashedIndex = element.getKey()%this->getCapacity();
     (*(hash_array + hashedIndex))->remove(element_node_to_remove);
     resize(DECREASE_SIZE);
     return HASH_TABLE_SUCCESS;
@@ -211,6 +207,8 @@ bool hashTable<T>::resizeRequired(int size_change)
     return false;
 }
 
+
+
 /**
  * @brief Increases the table's size
  * 
@@ -233,7 +231,7 @@ static void increaseSize(hashTable<T> *table)
             twListNode<T> *iter = (*(old_array + i))->getHead();
             while (iter != (*(old_array + i))->getTail())
             {
-                table->transfer(iter->getValue(), hashFunction);
+                table->transfer(iter->getValue());
                 iter = iter->getNext();
             }
         }
@@ -264,7 +262,7 @@ static void decreaseSize(hashTable<T> *table)
             twListNode<T> *iter = (*(old_array + i))->getHead();
             while (iter != (*(old_array + i))->getTail())
             {
-                table->transfer(iter->getValue(), hashFunction);
+                table->transfer(iter->getValue());
                 iter = iter->getNext();
             }
         }
@@ -278,15 +276,16 @@ static void decreaseSize(hashTable<T> *table)
  * 
  * @tparam T 
  * @param element element to add to the table
- * @param function hash function to perform
  */
 template <class T>
-void hashTable<T>::transfer(const T &element, int (*function)(T, int))
+void hashTable<T>::transfer(const T &element)
 {
-    int hashedIndex = function(element, this->getCapacity());
+    int hashedIndex = element.getKey()%this->getCapacity();
     if (*(hash_array + hashedIndex) == nullptr)
         *(hash_array + hashedIndex) = new twList<T>();
     (*(hash_array + hashedIndex))->addFirst(element);
 }
+
+
 
 #endif

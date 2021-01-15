@@ -181,7 +181,7 @@ twListNode<T>* twList<T>::contains(const int key)
     twListNode<T> *iter = this->getHead();
     while (iter != this->getTail())
     {
-        if (iter->getValue()->getKey() == element)
+        if (iter->getValue()->getValue()->getKey() == key)
             return iter;
         iter = iter->getNext();
     }

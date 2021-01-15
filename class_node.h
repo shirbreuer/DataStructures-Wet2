@@ -18,7 +18,7 @@ public:
     classNode(const int course_id, const int class_id);
     ~classNode() = default;
     int getTime() { return this->time; }
-    int getClassId() { return this->class_id; }
+    int getKey() { return this->class_id; }
     int getCourseId() { return this->course_id; }
     const int getCourseId() const { return this->course_id; }
     void* getParentPointer() { return this->parent;}

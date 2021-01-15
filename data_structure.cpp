@@ -19,21 +19,21 @@ StatusType courseManager::AddCourse(int courseID)
     if (!new_course)
         return (StatusType)HASH_TABLE_OUT_OF_MEMORY;
 
-    return (StatusType)getCourses()->add(*new_course, hashFunctionDS);
+    return (StatusType)getCourses()->add(*new_course);
 }
 
 void printCourseNode2(avlNode<courseNode> *node)
 {
     std::cout << "=========================" << std::endl;
-    std::cout << "left child of: " << node->getValue()->getId() << " is: " << (node->getLeft() ? node->getLeft()->getValue()->getId() : -1) << std::endl;
-    std::cout << "Right child of: " << node->getValue()->getId() << " is: " << (node->getRight() ? node->getRight()->getValue()->getId() : -1) << std::endl;
-    std::cout << "parent of: " << node->getValue()->getId() << " is: " << (node->getParent() ? node->getParent()->getValue()->getId() : -1) << std::endl;
+    std::cout << "left child of: " << node->getValue()->getKey() << " is: " << (node->getLeft() ? node->getLeft()->getValue()->getKey() : -1) << std::endl;
+    std::cout << "Right child of: " << node->getValue()->getKey() << " is: " << (node->getRight() ? node->getRight()->getValue()->getKey() : -1) << std::endl;
+    std::cout << "parent of: " << node->getValue()->getKey() << " is: " << (node->getParent() ? node->getParent()->getValue()->getKey() : -1) << std::endl;
     if (node->getParent())
     {
         if (node->isLeftChild())
-            std::cout << node->getValue()->getId() << " is left child" << std::endl;
+            std::cout << node->getValue()->getKey() << " is left child" << std::endl;
         else
-            std::cout << node->getValue()->getId() << " is right child" << std::endl;
+            std::cout << node->getValue()->getKey() << " is right child" << std::endl;
     }
     std::cout << "=========================" << std::endl;
 }
@@ -41,15 +41,15 @@ void printCourseNode2(avlNode<courseNode> *node)
 void printCourseNode2(avlNode<classNode> *node)
 {
     std::cout << "=========================" << std::endl;
-    std::cout << "left child of: " << node->getValue()->getClassId() << " is: " << (node->getLeft() ? node->getLeft()->getValue()->getClassId() : -1) << std::endl;
-    std::cout << "Right child of: " << node->getValue()->getClassId() << " is: " << (node->getRight() ? node->getRight()->getValue()->getClassId() : -1) << std::endl;
-    std::cout << "parent of: " << node->getValue()->getClassId() << " is: " << (node->getParent() ? node->getParent()->getValue()->getClassId() : -1) << std::endl;
+    std::cout << "left child of: " << node->getValue()->getKey() << " is: " << (node->getLeft() ? node->getLeft()->getValue()->getKey() : -1) << std::endl;
+    std::cout << "Right child of: " << node->getValue()->getKey() << " is: " << (node->getRight() ? node->getRight()->getValue()->getKey() : -1) << std::endl;
+    std::cout << "parent of: " << node->getValue()->getKey() << " is: " << (node->getParent() ? node->getParent()->getValue()->getKey() : -1) << std::endl;
     if (node->getParent())
     {
         if (node->isLeftChild())
-            std::cout << node->getValue()->getClassId() << " is left child" << std::endl;
+            std::cout << node->getValue()->getKey() << " is left child" << std::endl;
         else
-            std::cout << node->getValue()->getClassId() << " is right child" << std::endl;
+            std::cout << node->getValue()->getKey() << " is right child" << std::endl;
     }
     std::cout << "=========================" << std::endl;
 }
@@ -59,7 +59,7 @@ StatusType courseManager::RemoveCourse(int courseID)
     if (courseID <= 0)
         return INVALID_INPUT;
 
-    twListNode<courseNode> *course_pointer = this->getCourses()->find(courseID, hashFunction);
+    twListNode<courseNode> *course_pointer = this->getCourses()->find(courseID);
     if (!course_pointer)
         return FAILURE;
 
@@ -79,7 +79,7 @@ StatusType courseManager::RemoveCourse(int courseID)
         }
     }
 
-    hashTableResult remove_result = this->getCourses()->remove(course_pointer->getValue(), hashFunctionDS);
+    hashTableResult remove_result = this->getCourses()->remove(course_pointer->getValue());
     if (remove_result == AVL_TREE_SUCCESS)
         this->classes_counter -= number_of_classes;
 
@@ -91,7 +91,7 @@ StatusType courseManager::AddClass(int courseID, int *classID)
     if (courseID <= 0)
         return INVALID_INPUT;
 
-    twListNode<courseNode> *course_pointer = this->getCourses()->find(courseID, hashFunction);
+    twListNode<courseNode> *course_pointer = this->getCourses()->find(courseID);
     if (!course_pointer)
         return FAILURE;
     int curr_class_count = course_pointer->getValue().getNumOfClasses();
@@ -117,7 +117,7 @@ StatusType courseManager::TimeViewed(int courseID, int classID, int *timeViewed)
     if (courseID <= 0 || classID < 0)
         return INVALID_INPUT;
 
-    twListNode<courseNode> *course_pointer = this->getCourses()->find(courseID, hashFunction);
+    twListNode<courseNode> *course_pointer = this->getCourses()->find(courseID);
     if (!course_pointer)
         return FAILURE;
 
@@ -170,7 +170,7 @@ StatusType courseManager::replaceClass(avlNode<classNode> *ptr, int courseID, in
     }
     else
     {
-        classNode *new_class = new classNode(ptr->getValue()->getCourseId(), ptr->getValue()->getClassId(), /*(avlNode<courseNode> *)*/ ptr->getValue()->getParentPointer(), ptr->getValue()->getTime() + time);
+        classNode *new_class = new classNode(ptr->getValue()->getCourseId(), ptr->getValue()->getKey(), /*(avlNode<courseNode> *)*/ ptr->getValue()->getParentPointer(), ptr->getValue()->getTime() + time);
         if (!new_class)
             return (StatusType)AVL_TREE_OUT_OF_MEMORY;
         avlTreeResult_t remove_old_class_result = this->getClasses()->remove((ptr->getValue()));
@@ -194,10 +194,10 @@ StatusType courseManager::replaceClass(avlNode<classNode> *ptr, int courseID, in
 void copyNodeToArrays(avlNode<classNode> *node, int *courses, int *classes, int index)
 {
     courses[index] = node->getValue()->getCourseId();
-    classes[index] = node->getValue()->getClassId();
+    classes[index] = node->getValue()->getKey();
 }
 
-void copyEmptyClassesToArray(avlNode<twList<int>> *node, int *courses, int *classes, int *index_address, int classes_with_zero_views)
+void copyEmptyClassesToArray(avlNode<twList<int> > *node, int *courses, int *classes, int *index_address, int classes_with_zero_views)
 {
     twListNode<int> *head = node->getValue()->getHead();
     twListNode<int> *tail = node->getValue()->getTail();
@@ -236,5 +236,5 @@ int static hashFunctionDS(int num, int size = 16)
 
 int static hashFunctionDS(courseNode course, int size = 16)
 {
-    return course.getId() % size;
+    return course.getKey() % size;
 }

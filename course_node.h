@@ -38,8 +38,8 @@ public:
     bool operator==(const courseNode& courseToCompare) const;
     bool operator!() const;
     void setId(int new_id);
-    int getId() {return this->course_id;}
-    const int getId() const {return this->course_id;}
+    int getKey() {return this->course_id;}
+    const int getKey() const {return this->course_id;}
     void setNumOfClasses(int numOfClasses);
     int getNumOfClasses() {return this->num_of_classes;}
     const int getNumOfClasses() const {return this->num_of_classes;}
