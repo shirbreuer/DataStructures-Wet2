@@ -59,6 +59,7 @@ public:
     hashTableResult add(const T &element, int (*function)(T, int));
     hashTableResult remove(const T &element, int (*function)(T, int));
     twListNode<T> *find(const T &element, int (*function)(T, int));
+    twListNode<T> *find(const int key, int (*function)(int, int));
 
     void resize(int size_change);
     bool resizeRequired(int size_change);

@@ -8,7 +8,7 @@ courseNode::courseNode(const int courseID) :
 {
     // for (int i = 0; i < this->num_of_classes; i++)
     // {
-    //     *(this->classes_pointers_array + i) = nullptr;
+    //     *(this->classes_pointers_hashtable + i) = nullptr;
     //     this->zero_views_classes->addLast(i);
     //     *(this->zero_views_node_pointers + i) = this->zero_views_classes->getTail()->getPrev();
     // }
@@ -23,10 +23,27 @@ courseNode::courseNode():
 courseNode::~courseNode()
 {
     // std::cout << "deleted course: " << this->course_id << std::endl;
-    delete[] this->classes_pointers_array;
+    delete[] this->classes_pointers_hashtable;
     // delete[] this->zero_views_node_pointers;
     // delete this->zero_views_classes;
 }
+
+
+int static hashFunctionCourseNode(courseNode course, int size = 16)
+{
+    return course.getId()%size;
+}
+
+int static hashFunctionDS(int num, int size = 16)
+{
+    return num%size;
+}
+
+int stati hashFunctionAvlNode(avlNode<classNode> *class_pointer, int size = 16)
+{
+    return class_pointer->getValue()->getClassId()%size;
+}
+
 
 void courseNode::setId(int new_id)
 {
@@ -37,21 +54,19 @@ void courseNode::setNumOfClasses(int numOfClasses)
     this->num_of_classes = numOfClasses;
 }
 
-avlNode<classNode> *courseNode::getClass(const int classID)
+avlNode<classNode> *courseNode::getClass(const int classID) const
 {
     if (classID > num_of_classes)
-    {
-        return NULL;
-    }
-    return classes_pointers_array[classID];
+        return nullptr;
+
+    return this->classes_pointers_hashtable->find(classID, hashFunctionDS)->getValue();
 }
 
 CourseStatus courseNode::setClassPointer(int classID, avlNode<classNode> *class_ptr)
 {
     if (!class_ptr)
         return COURSE_FAILURE;
-    *(this->classes_pointers_array + classID) = class_ptr;
-    return COURSE_SUCCESS;
+    return (CourseStatus)this->classes_pointers_hashtable->add(class_ptr, hashFunctionAvlNode);
 }
 
 bool courseNode::operator<(const courseNode& courseToCompare) const

@@ -18,15 +18,8 @@ StatusType courseManager::AddCourse(int courseID)
     courseNode *new_course = new courseNode(courseID);
     if (!new_course)
         return (StatusType)HASH_TABLE_OUT_OF_MEMORY;
-    hashTableResult insert_result = getCourses()->add(*new_course, hashFunctionDS);
-    if (insert_result != HASH_TABLE_SUCCESS)
-    {
-        return (StatusType)insert_result;
-    }
-    avlNode<courseNode> *course_pointer = find(this->getCourses()->getRoot(), new_course);
-    this->getLists()->insert(course_pointer->getValue()->getList());
-    this->classes_counter += numOfClasses;
-    return (StatusType)insert_result;
+
+    return (StatusType)getCourses()->add(*new_course, hashFunctionDS);
 }
 
 void printCourseNode2(avlNode<courseNode> *node)
@@ -64,33 +57,59 @@ void printCourseNode2(avlNode<classNode> *node)
 StatusType courseManager::RemoveCourse(int courseID)
 {
     if (courseID <= 0)
-    {
         return INVALID_INPUT;
-    }
-    courseNode searching_course_template;
-    searching_course_template.setId(courseID);
-    avlNode<courseNode> *course_pointer = find(this->getCourses()->getRoot(), searching_course_template);
+
+    twListNode<courseNode> *course_pointer = this->getCourses()->find(courseID, hashFunction);
     if (!course_pointer)
-    {
         return FAILURE;
-    }
-    int number_of_classes = course_pointer->getValue()->getNumOfClasses();
+
+    int number_of_classes = course_pointer->getValue().getNumOfClasses();
     for (int i = 0; i < number_of_classes; i++)
     {
-        avlNode<classNode> *class_to_remove = *(course_pointer->getValue()->getPointersArray() + i);
+        avlNode<classNode> *class_to_remove = course_pointer->getValue().getClass(i);
         if (class_to_remove)
         {
-            this->getClasses()->remove(class_to_remove->getValue());
+            if (class_to_remove->getValue()->getTime() == 0) //class is not inside classes tree.
+            {
+                delete class_to_remove->getValue();
+                delete class_to_remove;
+            }
+            else
+                this->getClasses()->remove(class_to_remove->getValue()); //class is inside classes tree.
         }
     }
-    this->getLists()->removeWOFreeing(course_pointer->getValue()->getList());
-    avlTreeResult_t remove_result = this->getCourses()->remove((course_pointer->getValue()));
+
+    hashTableResult remove_result = this->getCourses()->remove(course_pointer->getValue(), hashFunctionDS);
     if (remove_result == AVL_TREE_SUCCESS)
-    {
         this->classes_counter -= number_of_classes;
-    }
 
     return (StatusType)remove_result;
+}
+
+StatusType courseManager::AddClass(int courseID, int *classID)
+{
+    if (courseID <= 0)
+        return INVALID_INPUT;
+
+    twListNode<courseNode> *course_pointer = this->getCourses()->find(courseID, hashFunction);
+    if (!course_pointer)
+        return FAILURE;
+    int curr_class_count = course_pointer->getValue().getNumOfClasses();
+    classNode* new_class_pointer = new classNode(courseID, curr_class_count);
+    if (!new_class_pointer)
+        return (StatusType)HASH_TABLE_OUT_OF_MEMORY;
+    avlNode<classNode>* new_avl_node = new avlNode<classNode>(new_class_pointer);
+    if (!new_avl_node) {
+        delete new_class_pointer;
+        return (StatusType)HASH_TABLE_OUT_OF_MEMORY;
+    }
+
+    StatusType return_result = (StatusType)course_pointer->getValue().setClassPointer(curr_class_count, new_avl_node);
+    if (return_result == SUCCESS) {
+        course_pointer->getValue().setNumOfClasses(curr_class_count+1);
+        *classID = curr_class_count+1;
+    }
+    return return_result;
 }
 
 StatusType courseManager::TimeViewed(int courseID, int classID, int *timeViewed)
@@ -98,21 +117,16 @@ StatusType courseManager::TimeViewed(int courseID, int classID, int *timeViewed)
     if (courseID <= 0 || classID < 0)
         return INVALID_INPUT;
 
-    courseNode new_course;
-    new_course.setId(courseID);
-    avlNode<courseNode> *wanted_course = find(this->getCourses()->getRoot(), &new_course);
-    if (!wanted_course)
+    twListNode<courseNode> *course_pointer = this->getCourses()->find(courseID, hashFunction);
+    if (!course_pointer)
         return FAILURE;
 
-    int num_of_classes = wanted_course->getValue()->getNumOfClasses();
-    if (classID + 1 > num_of_classes)
+    int classes_num = course_pointer->getValue().getNumOfClasses();
+    if (classID + 1 > classes_num)
         return INVALID_INPUT;
 
-    avlNode<classNode> *ptr = wanted_course->getValue()->getClassPointer(classID);
-    if (!ptr)
-        *timeViewed = 0;
-    else
-        *timeViewed = ptr->getValue()->getTime();
+    avlNode<classNode> *class_pointer = course_pointer->getValue().getClass(classID);
+    *timeViewed = class_pointer->getValue()->getTime();
 
     return SUCCESS;
 }
@@ -217,10 +231,10 @@ StatusType courseManager::GetMostViewedClasses(int numOfClasses, int *courses, i
 
 int static hashFunctionDS(int num, int size = 16)
 {
-    return num%size;
+    return num % size;
 }
 
 int static hashFunctionDS(courseNode course, int size = 16)
 {
-    return course.getId()%size;
+    return course.getId() % size;
 }

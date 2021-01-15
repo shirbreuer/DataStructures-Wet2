@@ -27,6 +27,7 @@ public:
     ~courseManager();
     StatusType AddCourse(int courseID);
     StatusType RemoveCourse(int courseID);
+    StatusType AddClass(int courseID, int* classID);
     StatusType WatchClass(int courseID, int classID, int time);
     StatusType TimeViewed(int courseID, int classID, int *timeViewed);
     StatusType GetMostViewedClasses(int numOfClasses, int *courses, int *classes);

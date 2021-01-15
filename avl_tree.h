@@ -20,15 +20,16 @@ private:
     avlNode<T> *largest;
     avlNode<T> *first; //is it equal to smallest?
 
-    avlTreeResult_t insertAvlNode(avlNode<T> *root, avlNode<T> *new_node);
-    avlTreeResult_t removeAvlNode(avlNode<T> *root, avlNode<T> *new_node);
-
 public:
     avlTree();
     ~avlTree();
-    avlTreeResult_t insert(T* const value);
-    avlTreeResult_t remove(T* const value);
+    avlTreeResult_t insert(T *const value);
+    avlTreeResult_t remove(T *const value);
     avlTreeResult_t removeWOFreeing(T *const value);
+
+    avlTreeResult_t insertAvlNode(avlNode<T> *root, avlNode<T> *new_node);
+    avlTreeResult_t removeAvlNode(avlNode<T> *root, avlNode<T> *new_node);
+
     void treeBalance(avlNode<T> *root);
     void rotateLeft(avlNode<T> *root);
     void rotateRight(avlNode<T> *root);
@@ -58,14 +59,14 @@ public:
     avlNode<T> *createNewSubTree(avlNode<T> *node);
     void swap(avlNode<T> *src, avlNode<T> *dst);
     avlNode<T> *firstInOrder(avlNode<T> *sub_root);
-    void removeNodeWithParent(avlNode<T> *node_to_remove);
+    void removeNodeWithParent(avlNode<T> *node_to_remove, int first_call);
 };
 
 template <class T>
-avlNode<T> *find(avlNode<T> *root, T* const value);
+avlNode<T> *find(avlNode<T> *root, T *const value);
 
 template <class T>
-avlNode<T> *find(avlNode<T> *root, const T& value);
+avlNode<T> *find(avlNode<T> *root, const T &value);
 
 template <class T>
 int getBF(avlNode<T> *root);

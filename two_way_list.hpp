@@ -100,6 +100,7 @@ public:
     twList<T> clone();
 
     twListNode<T>* contains(const T &element);
+    twListNode<T>* contains(const int key);
 
     std::string printList();
     /** //logical operator comparison functions://
@@ -168,6 +169,19 @@ twListNode<T>* twList<T>::contains(const T &element)
     while (iter != this->getTail())
     {
         if (iter->getValue() == element)
+            return iter;
+        iter = iter->getNext();
+    }
+    return nullptr;
+}
+
+template <class T>
+twListNode<T>* twList<T>::contains(const int key)
+{
+    twListNode<T> *iter = this->getHead();
+    while (iter != this->getTail())
+    {
+        if (iter->getValue()->getKey() == element)
             return iter;
         iter = iter->getNext();
     }
