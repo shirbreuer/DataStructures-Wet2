@@ -10,24 +10,8 @@
 */
 template <class T>
 DynamicArray<T>::DynamicArray() : size(INITIAL_SIZE), capacity(INITIAL_CAPACITY),
-                            load_factor(INITIAL_FACTOR), high_load_factor(DEFAULT_UPPER_FACTOR),
-                             dynamic_array(new T *[INITIAL_CAPACITY])
-{
-    dynamicSetNullptr(INITIAL_CAPACITY);
-}
-
-/**
- * @brief Dynamic Array constructor (with parameters)
- * Worst case - O(1)
- *
- * @tparam T
- * @param high_factor high boundry factor
- * @returns DynamicArray<T>
-*/
-template <class T>
-DynamicArray<T>::DynamicArray(float high_factor) : size(INITIAL_SIZE), capacity(INITIAL_CAPACITY),
-                                                           load_factor(INITIAL_FACTOR), high_load_factor(high_factor),
-                                                           dynamic_array(new T *[INITIAL_CAPACITY])
+                            high_load_factor(DEFAULT_UPPER_FACTOR),
+                            dynamic_array(new T *[INITIAL_CAPACITY])
 {
     dynamicSetNullptr(INITIAL_CAPACITY);
 }
@@ -51,21 +35,6 @@ DynamicArray<T>::~DynamicArray()
 }
 
 /**
- * @brief set all pointers in array to nullptr @ O(size).
- *
- * @param size size of array
-*/
-template <class T>
-void DynamicArray<T>::dynamicSetNullptr(int size)
-{
-    for (int i = 0; i < size; i++)
-    {
-        *(dynamic_array + i) = nullptr;
-    }
-}
-
-
-/**
  * Add new element to the array if it is not already in it.
  * @tparam T
  * @param element element to add to the array
@@ -73,65 +42,31 @@ void DynamicArray<T>::dynamicSetNullptr(int size)
  * @returns DynamicArrayResult
 */
 template <class T>
-DynamicArrayResult DynamicArray<T>::add(const T &element, int (*function)(T, int))
+DynamicArrayResult DynamicArray<T>::add(const T &element)
 {
-    if (find(element, function) != nullptr)
-        return DYNAMIC_ARRAY_FAILURE;
-    this->size++;
-    updateLoadFactor();
-    resize(INCREASE_SIZE);
-    int dynamicIndex = function(element, this->getCapacity());
-    if (*(dynamic_array + dynamicIndex) == nullptr)
-        *(dynamic_array + dynamicIndex) = new T();
-    (*(dynamic_array + dynamicIndex))->addFirst(element);
+    if(element==NULL)
+        return DYNAMIC_ARRAY_INVALID_INPUT;
+    if(size>=high_load_factor*capacity)
+        increaseSize(dynamic_array);
+    dynamic_array[size++]=element;
     return DYNAMIC_ARRAY_SUCCESS;
 }
 
-/**
- * @brief search for element in Dynamic Array
- * @tparam T 
- * @param element element to search in the array
- * @param function hash function to perform
- * @return T* 
- */
-template <class T>
-T *DynamicArray<T>::find(const T &element, int (*function)(T, int))
-{
-    // std::cout << "trying to find" << std::endl;
-    int hashedIndex = function(element, this->getCapacity());
-    // std::cout << (*(hash_array + hashedIndex) ? "123" : "0") << std::endl;
-    if (*(hash_array + hashedIndex) == nullptr) //no list
-        return nullptr;
-    return (*(hash_array + hashedIndex))->contains(element);
-}
 
 /**
- * @brief Add new element to the array if it is not already in it.
- * @tparam T 
+ * @brief Find an element in the array
  * @param key key to search in the array
- * @param function hash function to perform
  * @return T* 
  */
 template <class T>
-T *DynamicArray<T>::find(const int key, int (*function)(int, int))
+T* DynamicArray<T>::find(const int key)
 {
-    int hashedIndex = function(key, this->getCapacity());
-    if (*(hash_array + hashedIndex) == nullptr) //no list
-        return nullptr;
-    return (*(hash_array + hashedIndex))->contains(key);
+    if (key<size){
+        return NULL;
+    }
+    return *dynamic_array[index];
 }
 
-/**
- * @brief Updates current load factor.
- * 
- * @tparam T 
- */
-template <class T>
-void DynamicArray<T>::updateLoadFactor()
-{
-    float new_load_factor = (float)getSize()/getCapacity();
-    setFactor(new_load_factor);
-}
 
 /**
  * @brief wrapper function for resizing the array.
@@ -144,7 +79,6 @@ void DynamicArray<T>::resize(int size_change)
 {
     if (resizeRequired(size_change))
     {
-        // T **hash_array_copy = this->getArray();
         switch (size_change)
         {
         case INCREASE_SIZE:
@@ -158,7 +92,7 @@ void DynamicArray<T>::resize(int size_change)
 }
 
 /**
- * @brief Decide whether a array needs to be resized, according to load factor constraints.
+ * @brief Decide whether an array needs to be resized, according to load factor constraints.
  * 
  * @tparam T
  * @param size_change 
@@ -185,56 +119,19 @@ template <class T>
 static void increaseSize(DynamicArray<T> *array)
 {
     int old_capacity = array->getCapacity();
+    int old_size = array->getSize();
     array->setCapacity(old_capacity * DYNAMIC_ARRAY_CHANGE);
     T **new_array = new T *[array->getCapacity()];
+    if(!new_array){
+        return DYNAMIC_ARRAY_OUT_OF_MEMORY;
+    }
     T **old_array = array->getArray();
-    array->setArray(new_array);
-    array->hashSetNullptr(array->getCapacity());
-    for (int i = 0; i < old_capacity; i++)
+    for (int i = 0; i < old_size; i++)
     {
-        if (*(old_array + i) != nullptr)
-        {
-            T *iter = (*(old_array + i))->getHead();
-            while (iter != (*(old_array + i))->getTail())
-            {
-                array->transfer(iter->getValue(), hashFunction);
-                iter = iter->getNext();
-            }
-        }
-        delete *(old_array + i);
+        new_array[i]=old_array[i];
     }
     delete[] old_array;
-}
-
-/**
- * @brief Decreases the array's size
- * 
- * @tparam T 
- * @param array DynamicArray to perform resizing on 
- */
-template <class T>
-static void decreaseSize(DynamicArray<T> *array)
-{
-    int old_capacity = array->getCapacity();
-    array->setCapacity(old_capacity / DYNAMIC_ARRAY_CHANGE);
-    T **new_array = new T *[array->getCapacity()];
-    T **old_array = array->getArray();
     array->setArray(new_array);
-    array->hashSetNullptr(array->getCapacity());
-    for (int i = 0; i < old_capacity; i++)
-    {
-        if (*(old_array + i) != nullptr)
-        {
-            T *iter = (*(old_array + i))->getHead();
-            while (iter != (*(old_array + i))->getTail())
-            {
-                array->transfer(iter->getValue(), hashFunction);
-                iter = iter->getNext();
-            }
-        }
-        delete *(old_array + i);
-    }
-    delete[] old_array;
 }
 
 /**
