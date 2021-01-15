@@ -2,17 +2,7 @@
 
 courseNode::courseNode(const int courseID) :
         course_id(courseID), num_of_classes(0),
-        classes_pointers_array(new avlNode<classNode> *[0])
-        // zero_views_node_pointers(new twListNode<int> *[0]),
-        // zero_views_classes(new twList<int>(courseID))
-{
-    // for (int i = 0; i < this->num_of_classes; i++)
-    // {
-    //     *(this->classes_pointers_hashtable + i) = nullptr;
-    //     this->zero_views_classes->addLast(i);
-    //     *(this->zero_views_node_pointers + i) = this->zero_views_classes->getTail()->getPrev();
-    // }
-}
+        classes_pointers_array(new avlNode<classNode> *[0]) {}
 
 courseNode::courseNode():
         classes_pointers_array(new avlNode<classNode> *[1])

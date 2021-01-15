@@ -21,10 +21,7 @@ class courseNode
 private:
     int course_id;
     int num_of_classes;
-    // avlNode<classNode>** classes_pointers_array;
-    hashTable<avlNode<classNode>*>* classes_pointers_hashtable;
-    // twListNode<int>** zero_views_node_pointers;
-    // twList<int>* zero_views_classes;
+    
 
 public:
     courseNode();
