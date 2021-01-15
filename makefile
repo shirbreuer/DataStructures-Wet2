@@ -38,6 +38,9 @@ NC=\033[0m # No Color
 compile:
 	g++ -g -std=c++11 -Wall -DNDEBUG *.cpp
 
+main:
+	g++ -g -std=c++11 -Wall -DNDEBUG main.cpp
+
 tar:  $(HFLS) $(CPPFLS) $(HPPFLS) $(MISCFLS)
 	zip Wet2.zip $(HFLS) $(CPPFLS) $(HPPFLS) $(MISCFLS)
 
@@ -53,6 +56,8 @@ tar:  $(HFLS) $(CPPFLS) $(HPPFLS) $(MISCFLS)
 clean:
 	rm -f $(OBJS) $(EXEC)
 
+val_int:
+	valgrind --leak-check=full --track-origins=yes ./a.out
 
 #to run, type make val v=(number)
 val:

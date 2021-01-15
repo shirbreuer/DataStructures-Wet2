@@ -39,19 +39,19 @@ void courseNode::setNumOfClasses(int numOfClasses)
     this->num_of_classes = numOfClasses;
 }
 
-avlNode<classNode> *courseNode::getClass(const int classID) const
-{
-    if (classID > num_of_classes)
-        return NULL;
+// avlNode<classNode> *courseNode::getClass(const int classID) const
+// {
+//     if (classID > num_of_classes)
+//         return NULL;
 
-    return this->classes_pointers_hashtable->find(classID)->getValue();
-}
+//     return this->classes_pointers_hashtable->find(classID)->getValue();
+// }
 
 CourseStatus courseNode::setClassPointer(int classID, avlNode<classNode> *class_ptr)
 {
-    if (!class_ptr)
+    // if (!class_ptr)
         return COURSE_FAILURE;
-    return (CourseStatus)this->classes_pointers_hashtable->add(class_ptr);
+    // return (CourseStatus)this->classes_pointers_hashtable->add(class_ptr);
 }
 
 bool courseNode::operator<(const courseNode& courseToCompare) const

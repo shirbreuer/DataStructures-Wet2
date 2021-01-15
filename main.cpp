@@ -1,5 +1,6 @@
 #include "avl_tree.hpp"
 #include "avl_node.hpp"
+#include "hash_table.hpp"
 #include "stdio.h"
 
 void print(avlNode<int> *root)
@@ -13,8 +14,15 @@ private:
     int num;
 
 public:
-    int_test(int key = 0) : num(key);
+    int_test(int key = 0) : num(key) {}
     ~int_test() = default;
+    int getKey() { return this->num; }
+    const int getKey() const { return this->num; }
+
+    bool operator==(const int_test &other) const
+    {
+        return this->getKey() == other.getKey();
+    }
 };
 
 int main()
@@ -31,20 +39,20 @@ int main()
 
     // hashTable<int> a;
     // a.add(15, hash);
-    hashTable<int> *b = new hashTable<int>(0.5f, 0.75f);
+    hashTable<int_test> *b = new hashTable<int_test>(0.5f, 0.75f);
     for (int i = 0; i < 1500; i++)
     {
-        // int c = b->getCapacity();
+        int c = b->getCapacity();
         // std::cout << i << "           ";
         b->add(8 + 16 * i);
-        // if (c != b->getCapacity())
-        // std::cout << std:: endl << "New capacity: " << b->getCapacity() << std:: endl;
+        if (c != b->getCapacity())
+        std::cout << std:: endl << "New capacity: " << b->getCapacity() << std:: endl;
     }
-    // for (int i = 0; i < 1500; i++)
-    //     {
-    //         // std::cout << i << "           ";
-    //         b->remove(8+16*i, hash);
-    //     }
+    for (int i = 0; i < 1500; i++)
+        {
+            // std::cout << i << "           ";
+            b->remove(8+16*i);
+        }
     // std::cout << hash(1, 12) << std::endl;
     // std::cout << a.getCapacity() << std::endl;
     // std::cout << a.getSize() << std::endl;

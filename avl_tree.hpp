@@ -13,7 +13,7 @@
 // void printCourseNode2(avlNode<classNode> *node);
 
 template <class T>
-static void deleteNode(avlNode<T> *node)
+void deleteNode(avlNode<T> *node)
 {
     if (!node)
         return;
@@ -283,7 +283,7 @@ avlNode<T> *avlTree<T>::createNewSubTree(avlNode<T> *node)
         // printCourseNode(node);
         // printCourseNode(next_node_in_order);
         next_node_in_order->setParent(NULL);
-        removeNodeWithParent(node);
+        removeNodeWithParent(node, 0);
         // std::cout << "next node in order left child: " << next_node_in_order->getLeft()->getValue() << std::endl;
         return next_node_in_order;
     }
@@ -951,19 +951,24 @@ int avlTree<T>::reverseInOrder(int m, void (*function)(avlNode<T> *, int *, int 
 }
 
 template <class T>
-avlNode<T>* avlTree<T>::select (int k){
-    if (k > root.getIndex()){
+avlNode<T> *avlTree<T>::select(int k)
+{
+    if (k > root.getIndex())
+    {
         return nullptr;
     }
     int wanted_index = k;
     avlNode<T> current_node = this->getRoot();
     int current_left_rank = this->getLeft() ? current_node.getLeft().getRank() : 0;
-    while(current_left_rank != wanted_index){
-        if(current_left_rank > k-1){
-            current_node = current_node.getLeft();    
+    while (current_left_rank != wanted_index)
+    {
+        if (current_left_rank > k - 1)
+        {
+            current_node = current_node.getLeft();
         }
-        else{
-            wanted_index -= (current_left_rank + 1)
+        else
+        {
+            wanted_index -= (current_left_rank + 1);
             current_node = current_node.getRight();
         }
         current_left_rank = this->getLeft() ? current_node.getLeft().getRank() : 0;

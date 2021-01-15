@@ -15,7 +15,7 @@ void *Init()
 StatusType AddCourse(void *DS, int courseID)
 {
     DataStructureIsValid(DS);
-    return (((courseManager *)DS)->AddCourse(courseID);
+    return (((courseManager *)DS)->AddCourse(courseID));
 }
 StatusType RemoveCourse(void *DS, int courseID)
 {
@@ -23,11 +23,11 @@ StatusType RemoveCourse(void *DS, int courseID)
     return ((courseManager *)DS)->RemoveCourse(courseID);
 }
 
-StatusType WatchClass(void *DS, int courseID, int classID, int time)
-{
-    DataStructureIsValid(DS);
-    return ((courseManager *)DS)->WatchClass(courseID, classID, time);
-}
+// StatusType WatchClass(void *DS, int courseID, int classID, int time)
+// {
+//     DataStructureIsValid(DS);
+//     return ((courseManager *)DS)->WatchClass(courseID, classID, time);
+// }
 
 StatusType TimeViewed(void *DS, int courseID, int classID, int *timeViewed)
 {
@@ -35,11 +35,11 @@ StatusType TimeViewed(void *DS, int courseID, int classID, int *timeViewed)
     return ((courseManager *)DS)->TimeViewed(courseID, classID, timeViewed);
 }
 
-StatusType GetMostViewedClasses(void *DS, int numOfClasses, int *courses, int *classes)
-{
-    DataStructureIsValid(DS);
-    return ((courseManager *)DS)->GetMostViewedClasses(numOfClasses, courses, classes);
-}
+// StatusType GetMostViewedClasses(void *DS, int numOfClasses, int *courses, int *classes)
+// {
+//     DataStructureIsValid(DS);
+//     return ((courseManager *)DS)->GetMostViewedClasses(numOfClasses, courses, classes);
+// }
 
 void Quit(void** DS)
 {
