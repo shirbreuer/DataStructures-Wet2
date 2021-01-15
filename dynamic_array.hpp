@@ -1,57 +1,53 @@
-#ifndef HASH_TABLE_HPP
-#define HASH_TABLE_HPP
+#ifndef DYNAMIC_ARRAY_HPP
+#define DYNAMIC_ARRAY_HPP
 
-#include "hash_table.h"
+#include "dynamic_array.h"
 
 /**
- * @brief Hash table constructor (without parameters)
+ * @brief Dynamic Array constructor (without parameters)
  *
- * @returns hashTable<T>
+ * @returns DynamicArray<T>
 */
 template <class T>
-hashTable<T>::hashTable() : size(INITIAL_SIZE), capacity(INITIAL_CAPACITY),
-                            load_factor(INITIAL_FACTOR), low_load_factor(DEFAULT_LOWER_FACTOR),
-                            high_load_factor(DEFAULT_UPPER_FACTOR), hash_array(new twList<T> *[INITIAL_CAPACITY])
+DynamicArray<T>::DynamicArray() : size(INITIAL_SIZE), capacity(INITIAL_CAPACITY),
+                            load_factor(INITIAL_FACTOR), high_load_factor(DEFAULT_UPPER_FACTOR),
+                             dynamic_array(new T *[INITIAL_CAPACITY])
 {
-    // std::cout << "non parametric constructor" << std::endl;
-    hashSetNullptr(INITIAL_CAPACITY);
+    dynamicSetNullptr(INITIAL_CAPACITY);
 }
 
 /**
- * @brief Hash table constructor (with parameters)
+ * @brief Dynamic Array constructor (with parameters)
  * Worst case - O(1)
  *
  * @tparam T
- * @param low_factor low boundry factor
  * @param high_factor high boundry factor
- * @returns hashTable<T>
+ * @returns DynamicArray<T>
 */
 template <class T>
-hashTable<T>::hashTable(float low_factor, float high_factor) : size(INITIAL_SIZE), capacity(INITIAL_CAPACITY),
-                                                           load_factor(INITIAL_FACTOR), low_load_factor(low_factor),
-                                                           high_load_factor(high_factor), hash_array(new twList<T> *[INITIAL_CAPACITY])
+DynamicArray<T>::DynamicArray(float high_factor) : size(INITIAL_SIZE), capacity(INITIAL_CAPACITY),
+                                                           load_factor(INITIAL_FACTOR), high_load_factor(high_factor),
+                                                           dynamic_array(new T *[INITIAL_CAPACITY])
 {
-    // std::cout << "parametric constructor: " << INITIAL_SIZE << std::endl;
-    hashSetNullptr(INITIAL_CAPACITY);
-    // std::cout << "12322";
+    dynamicSetNullptr(INITIAL_CAPACITY);
 }
 
 /**
- * @brief Destroy the hash Table<T>::hash Table object
+ * @brief Destroy the Dynamic Array<T>::Dynamic Array object
  * 
  * @tparam T 
  */
 template <class T>
-hashTable<T>::~hashTable()
+DynamicArray<T>::~DynamicArray() 
 {
-    for (int i = 0; i < getCapacity(); i++)
+    int num_of_elements = getSize();
+    for (int i = 0; i < num_of_elements; i++)
     {
-        if (*(hash_array + i) != nullptr) {
-            // std::cout << i << " list" << std::endl;
-            delete *(hash_array + i);
+        if (*(dynamic_array + i) != nullptr) {
+            delete *(dynamic_array + i);
         }
     }
-    delete[] hash_array;
+    delete[] dynamic_array;
 }
 
 /**
@@ -60,52 +56,46 @@ hashTable<T>::~hashTable()
  * @param size size of array
 */
 template <class T>
-void hashTable<T>::hashSetNullptr(int size)
+void DynamicArray<T>::dynamicSetNullptr(int size)
 {
-    // std::cout << "initial size is: " << size << std::endl;
     for (int i = 0; i < size; i++)
     {
-        *(hash_array + i) = nullptr;
-        // std::cout << i << std::endl;
+        *(dynamic_array + i) = nullptr;
     }
 }
 
 
 /**
- * Add new element to the table if it is not already in it.
+ * Add new element to the array if it is not already in it.
  * @tparam T
- * @param element element to add to the table
- * @param function hash function to perform
- * @returns hashTableResult
+ * @param element element to add to the array
+ * @param function dynamic function to perform
+ * @returns DynamicArrayResult
 */
 template <class T>
-hashTableResult hashTable<T>::add(const T &element, int (*function)(T, int))
+DynamicArrayResult DynamicArray<T>::add(const T &element, int (*function)(T, int))
 {
-    // std::cout <<"trying to add" << std::endl;
     if (find(element, function) != nullptr)
-        return HASH_TABLE_FAILURE;
-    // std::cout <<"not found" << std::endl;
-
+        return DYNAMIC_ARRAY_FAILURE;
     this->size++;
     updateLoadFactor();
     resize(INCREASE_SIZE);
-    int hashedIndex = function(element, this->getCapacity());
-    if (*(hash_array + hashedIndex) == nullptr)
-        *(hash_array + hashedIndex) = new twList<T>();
-    (*(hash_array + hashedIndex))->addFirst(element);
-    // std::cout << *(*(hash_array + hashedIndex)) << std::endl;
-    return HASH_TABLE_SUCCESS;
+    int dynamicIndex = function(element, this->getCapacity());
+    if (*(dynamic_array + dynamicIndex) == nullptr)
+        *(dynamic_array + dynamicIndex) = new T();
+    (*(dynamic_array + dynamicIndex))->addFirst(element);
+    return DYNAMIC_ARRAY_SUCCESS;
 }
 
 /**
- * @brief search for element in hash table
+ * @brief search for element in Dynamic Array
  * @tparam T 
- * @param element element to search in the table
+ * @param element element to search in the array
  * @param function hash function to perform
- * @return twListNode<T>* 
+ * @return T* 
  */
 template <class T>
-twListNode<T> *hashTable<T>::find(const T &element, int (*function)(T, int))
+T *DynamicArray<T>::find(const T &element, int (*function)(T, int))
 {
     // std::cout << "trying to find" << std::endl;
     int hashedIndex = function(element, this->getCapacity());
@@ -116,45 +106,19 @@ twListNode<T> *hashTable<T>::find(const T &element, int (*function)(T, int))
 }
 
 /**
- * @brief Add new element to the table if it is not already in it.
+ * @brief Add new element to the array if it is not already in it.
  * @tparam T 
- * @param key key to search in the table
+ * @param key key to search in the array
  * @param function hash function to perform
- * @return twListNode<T>* 
+ * @return T* 
  */
 template <class T>
-twListNode<T> *hashTable<T>::find(const int key, int (*function)(int, int))
+T *DynamicArray<T>::find(const int key, int (*function)(int, int))
 {
-    // std::cout << "trying to find" << std::endl;
     int hashedIndex = function(key, this->getCapacity());
-    // std::cout << (*(hash_array + hashedIndex) ? "123" : "0") << std::endl;
     if (*(hash_array + hashedIndex) == nullptr) //no list
         return nullptr;
     return (*(hash_array + hashedIndex))->contains(key);
-}
-
-
-
-
-/**
- * @brief delete element from the table if the table contains this element.
- * @tparam T
- * @param element element to remove from the table
- * @param function hash function to perform
- * @returns hashTableResult
-*/
-template <class T>
-hashTableResult hashTable<T>::remove(const T &element, int (*function)(T, int))
-{
-    twListNode<T>* element_node_to_remove = find(element, function);
-    if (element_node_to_remove == nullptr)
-        return HASH_TABLE_FAILURE;
-    this->size--;
-    updateLoadFactor();
-    int hashedIndex = function(element, this->getCapacity());
-    (*(hash_array + hashedIndex))->remove(element_node_to_remove);
-    resize(DECREASE_SIZE);
-    return HASH_TABLE_SUCCESS;
 }
 
 /**
@@ -163,24 +127,24 @@ hashTableResult hashTable<T>::remove(const T &element, int (*function)(T, int))
  * @tparam T 
  */
 template <class T>
-void hashTable<T>::updateLoadFactor()
+void DynamicArray<T>::updateLoadFactor()
 {
     float new_load_factor = (float)getSize()/getCapacity();
     setFactor(new_load_factor);
 }
 
 /**
- * @brief wrapper function for resizing the table.
+ * @brief wrapper function for resizing the array.
  * 
  * 
  * @param size_change (1) if increasing, (-1) if decreasing
  */
 template <class T>
-void hashTable<T>::resize(int size_change)
+void DynamicArray<T>::resize(int size_change)
 {
     if (resizeRequired(size_change))
     {
-        // twList<T> **hash_array_copy = this->getArray();
+        // T **hash_array_copy = this->getArray();
         switch (size_change)
         {
         case INCREASE_SIZE:
@@ -194,7 +158,7 @@ void hashTable<T>::resize(int size_change)
 }
 
 /**
- * @brief Decide whether a table needs to be resized, according to load factor constraints.
+ * @brief Decide whether a array needs to be resized, according to load factor constraints.
  * 
  * @tparam T
  * @param size_change 
@@ -202,38 +166,38 @@ void hashTable<T>::resize(int size_change)
  * @return false 
  */
 template <class T>
-bool hashTable<T>::resizeRequired(int size_change)
+bool DynamicArray<T>::resizeRequired(int size_change)
 {
     if (size_change == INCREASE_SIZE)
         return getFactor() > getHighFactor();
-    else if (getCapacity() / HASH_TABLE_CHANGE >= MIN_HASH_TABLE_SIZE)
+    else if (getCapacity() / DYNAMIC_ARRAY_CHANGE >= MIN_DYNAMIC_ARRAY_SIZE)
         return getFactor() < getLowFactor();
     return false;
 }
 
 /**
- * @brief Increases the table's size
+ * @brief Increases the array's size
  * 
  * @tparam T 
- * @param table Hashtable to perform resizing on 
+ * @param array DynamicArray to perform resizing on 
  */
 template <class T>
-static void increaseSize(hashTable<T> *table)
+static void increaseSize(DynamicArray<T> *array)
 {
-    int old_capacity = table->getCapacity();
-    table->setCapacity(old_capacity * HASH_TABLE_CHANGE);
-    twList<T> **new_array = new twList<T> *[table->getCapacity()];
-    twList<T> **old_array = table->getArray();
-    table->setArray(new_array);
-    table->hashSetNullptr(table->getCapacity());
+    int old_capacity = array->getCapacity();
+    array->setCapacity(old_capacity * DYNAMIC_ARRAY_CHANGE);
+    T **new_array = new T *[array->getCapacity()];
+    T **old_array = array->getArray();
+    array->setArray(new_array);
+    array->hashSetNullptr(array->getCapacity());
     for (int i = 0; i < old_capacity; i++)
     {
         if (*(old_array + i) != nullptr)
         {
-            twListNode<T> *iter = (*(old_array + i))->getHead();
+            T *iter = (*(old_array + i))->getHead();
             while (iter != (*(old_array + i))->getTail())
             {
-                table->transfer(iter->getValue(), hashFunction);
+                array->transfer(iter->getValue(), hashFunction);
                 iter = iter->getNext();
             }
         }
@@ -243,28 +207,28 @@ static void increaseSize(hashTable<T> *table)
 }
 
 /**
- * @brief Decreases the table's size
+ * @brief Decreases the array's size
  * 
  * @tparam T 
- * @param table Hashtable to perform resizing on 
+ * @param array DynamicArray to perform resizing on 
  */
 template <class T>
-static void decreaseSize(hashTable<T> *table)
+static void decreaseSize(DynamicArray<T> *array)
 {
-    int old_capacity = table->getCapacity();
-    table->setCapacity(old_capacity / HASH_TABLE_CHANGE);
-    twList<T> **new_array = new twList<T> *[table->getCapacity()];
-    twList<T> **old_array = table->getArray();
-    table->setArray(new_array);
-    table->hashSetNullptr(table->getCapacity());
+    int old_capacity = array->getCapacity();
+    array->setCapacity(old_capacity / DYNAMIC_ARRAY_CHANGE);
+    T **new_array = new T *[array->getCapacity()];
+    T **old_array = array->getArray();
+    array->setArray(new_array);
+    array->hashSetNullptr(array->getCapacity());
     for (int i = 0; i < old_capacity; i++)
     {
         if (*(old_array + i) != nullptr)
         {
-            twListNode<T> *iter = (*(old_array + i))->getHead();
+            T *iter = (*(old_array + i))->getHead();
             while (iter != (*(old_array + i))->getTail())
             {
-                table->transfer(iter->getValue(), hashFunction);
+                array->transfer(iter->getValue(), hashFunction);
                 iter = iter->getNext();
             }
         }
@@ -274,18 +238,18 @@ static void decreaseSize(hashTable<T> *table)
 }
 
 /**
- * @brief add element to table without resizing (to avoid infinite loop)
+ * @brief add element to array without resizing (to avoid infinite loop)
  * 
  * @tparam T 
- * @param element element to add to the table
+ * @param element element to add to the array
  * @param function hash function to perform
  */
 template <class T>
-void hashTable<T>::transfer(const T &element, int (*function)(T, int))
+void DynamicArray<T>::transfer(const T &element, int (*function)(T, int))
 {
     int hashedIndex = function(element, this->getCapacity());
     if (*(hash_array + hashedIndex) == nullptr)
-        *(hash_array + hashedIndex) = new twList<T>();
+        *(hash_array + hashedIndex) = new T();
     (*(hash_array + hashedIndex))->addFirst(element);
 }
 
