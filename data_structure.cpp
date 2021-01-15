@@ -154,7 +154,7 @@ StatusType courseManager::WatchClass(int courseID, int classID, int time)
     int curr_time = ptr->getValue()->getTime();
     if (curr_time == 0)
     {
-        ptr->getValue()->setTime(curr_time + time);
+        ptr->getValue()->setTime(time);
         return (StatusType)this->getClasses()->insertAvlNode(this->getClasses()->getRoot(), ptr);
     }
     else
