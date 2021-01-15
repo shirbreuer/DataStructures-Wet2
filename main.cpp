@@ -1,8 +1,6 @@
 #include "avl_tree.hpp"
 #include "avl_node.hpp"
-#include "hash_table.hpp"
-#include "hash_table.h"
-#include "int_test.hpp"
+#include "stdio.h"
 
 void print(avlNode<int> *root)
 {

@@ -949,4 +949,24 @@ int avlTree<T>::reverseInOrder(int m, void (*function)(avlNode<T> *, int *, int 
     }
     return (m - i);
 }
+
+template <class T>
+avlNode<T>* avlTree<T>::select (int k){
+    if (k > root.getIndex()){
+        return nullptr;
+    }
+    int wanted_index = k;
+    avlNode<T> current_node = this->getRoot();
+    int current_left_rank = this->getLeft() ? current_node.getLeft().getRank() : 0;
+    while(current_left_rank != wanted_index){
+        if(current_left_rank > k-1){
+            current_node = current_node.getLeft();    
+        }
+        else{
+            wanted_index -= (current_left_rank + 1)
+            current_node = current_node.getRight();
+        }
+        current_left_rank = this->getLeft() ? current_node.getLeft().getRank() : 0;
+    }
+}
 #endif
