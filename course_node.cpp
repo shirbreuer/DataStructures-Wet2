@@ -2,7 +2,7 @@
 
 courseNode::courseNode(const int courseID) :
         course_id(courseID), num_of_classes(0),
-        classes_pointers_array(new avlNode<classNode> *[0]),
+        classes_pointers_array(new avlNode<classNode> *[0])
         // zero_views_node_pointers(new twListNode<int> *[0]),
         // zero_views_classes(new twList<int>(courseID))
 {
@@ -15,7 +15,7 @@ courseNode::courseNode(const int courseID) :
 }
 
 courseNode::courseNode():
-        classes_pointers_array(new avlNode<classNode> *[1]),
+        classes_pointers_array(new avlNode<classNode> *[1])
         // zero_views_node_pointers(new twListNode<int> *[1]),
         // zero_views_classes(new twList<int>())
 {}
