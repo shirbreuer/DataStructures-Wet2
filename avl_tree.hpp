@@ -160,7 +160,7 @@ avlTreeResult_t avlTree<T>::remove(T *const value)
         rootUpdate(newroot);
     }
     else
-        removeNodeWithParent(node_to_remove);
+        removeNodeWithParent(node_to_remove, 1);
 
     deleteNode(node_to_remove);
     updateLargest(root);
@@ -192,7 +192,7 @@ avlTreeResult_t avlTree<T>::removeWOFreeing(T *const value)
         rootUpdate(newroot);
     }
     else
-        removeNodeWithParent(node_to_remove);
+        removeNodeWithParent(node_to_remove, 1);
 
     deleteNodeWOFreeing(node_to_remove);
     updateLargest(root);
@@ -202,7 +202,7 @@ avlTreeResult_t avlTree<T>::removeWOFreeing(T *const value)
 }
 
 template <class T>
-void avlTree<T>::removeNodeWithParent(avlNode<T> *node_to_remove)
+void avlTree<T>::removeNodeWithParent(avlNode<T> *node_to_remove, int first_call)
 {
     // std::cout << "removing node with parent: " << node_to_remove->getValue() << std::endl;
     avlNode<T> *parent = node_to_remove->getParent();
@@ -224,12 +224,14 @@ void avlTree<T>::removeNodeWithParent(avlNode<T> *node_to_remove)
     if (is_right)
     {
         recursiveSetHeightAndRank(parent->getRight());
-        treeBalance(parent->getRight());
+        if (first_call)
+            treeBalance(parent->getRight());
     }
     else
     {
-        recursiveSetHeightAndRank(parent->getRight());
-        treeBalance(parent->getLeft());
+        recursiveSetHeightAndRank(parent->getLeft());
+        if (first_call)
+            treeBalance(parent->getLeft());
     }
 }
 

@@ -58,7 +58,7 @@ public:
     avlNode<T> *createNewSubTree(avlNode<T> *node);
     void swap(avlNode<T> *src, avlNode<T> *dst);
     avlNode<T> *firstInOrder(avlNode<T> *sub_root);
-    void removeNodeWithParent(avlNode<T> *node_to_remove);
+    void removeNodeWithParent(avlNode<T> *node_to_remove, int first_call);
 };
 
 template <class T>
