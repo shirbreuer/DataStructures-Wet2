@@ -970,8 +970,24 @@ avlNode<T> *avlTree<T>::select(int k)
         {
             wanted_index -= (current_left_rank + 1);
             current_node = current_node.getRight();
-        }
-        current_left_rank = this->getLeft() ? current_node.getLeft().getRank() : 0;
+avlNode<T>* avlTree<T>::select (int k){
+    if (k > root->getRank()){
+        return nullptr;
     }
+    int wanted_index = k;
+    avlNode<T>* current_node = this->getRoot();
+    int current_left_rank = current_node->getLeft() ? current_node->getLeft()->getRank() : 0;
+    while(current_left_rank != wanted_index-1){
+        if(current_left_rank > wanted_index-1){
+            current_node = current_node->getLeft();
+        }
+        else {
+            wanted_index -= (current_left_rank + 1);
+            current_node = current_node->getRight();
+        }
+        current_left_rank = current_node->getLeft() ? current_node->getLeft()->getRank() : 0;
+    }
+    return current_node;
 }
+
 #endif
