@@ -99,8 +99,8 @@ public:
 
     twList<T> clone();
 
-    twListNode<T>* contains(const T &element);
-    twListNode<T>* contains(const int key);
+    twListNode<T> *contains(const T &element);
+    twListNode<T> *contains(const int key);
 
     std::string printList();
     /** //logical operator comparison functions://
@@ -123,6 +123,8 @@ public:
     bool operator>=(const twList<T> &twList);
     bool operator<(const twList<T> &twList);
     bool operator>(const twList<T> &twList);
+
+    void emptyList();
 };
 
 //implementation of twList class functions//
@@ -163,7 +165,7 @@ twList<T>::twList(const twList &tw_list) : head(tw_list.head.clone()), tail(tw_l
 }
 
 template <class T>
-twListNode<T>* twList<T>::contains(const T &element)
+twListNode<T> *twList<T>::contains(const T &element)
 {
     twListNode<T> *iter = this->getHead();
     while (iter != this->getTail())
@@ -176,7 +178,7 @@ twListNode<T>* twList<T>::contains(const T &element)
 }
 
 template <class T>
-twListNode<T>* twList<T>::contains(const int key)
+twListNode<T> *twList<T>::contains(const int key)
 {
     twListNode<T> *iter = this->getHead();
     while (iter != this->getTail())
@@ -192,6 +194,7 @@ twListNode<T>* twList<T>::contains(const int key)
 template <class T>
 twList<T>::~twList()
 {
+    // std::cout << "List size before: " << this->size() << std::endl;
     // std::cout << "emptying list" << std::endl;
     twListNode<T> *from = head;
     while ((*from).getNext() != tail)
@@ -199,12 +202,28 @@ twList<T>::~twList()
         twListNode<T> *curr = from->getNext();
         from->setNext(curr->getNext());
         from->getNext()->setPrev(from);
-        delete curr->getValue();
         delete curr;
+        this->num_of_nodes--;
     }
     delete (tail);
     delete (head);
+    // std::cout << "List size after: " << this->size() << std::endl;
 }
+
+template <class T>
+void twList<T>::emptyList()
+{
+    // std::cout << "emptying list" << std::endl;
+    twListNode<T> *from = head;
+    while ((*from).getNext() != tail)
+    {
+        twListNode<T> *curr = from->getNext();
+        if (curr && curr->getValue())
+            delete curr->getValue();
+        from = from->getNext();
+    }
+}
+
 
 template <class T>
 twList<T> &twList<T>::operator=(const twList<T> &twList_t)

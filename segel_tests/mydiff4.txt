@@ -1,0 +1,20 @@
+1139c1139
+< GetIthWatchedClass: 7695045 4
+---
+> GetIthWatchedClass: 573490 1
+1257c1257
+< GetIthWatchedClass: FAILURE
+---
+> GetIthWatchedClass: 1654419 12
+1588c1588
+< GetIthWatchedClass: 1654419 12
+---
+> GetIthWatchedClass: 8502062 3
+2943c2943
+< GetIthWatchedClass: 4243633 3
+---
+> GetIthWatchedClass: 9807329 1
+4536c4536
+< GetIthWatchedClass: 1385601 4
+---
+> GetIthWatchedClass: 562313 7

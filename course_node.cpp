@@ -58,6 +58,10 @@ CourseStatus courseNode::setClassPointer(int classID, avlNode<classNode> *class_
     else
         return (CourseStatus)this->array->update(class_ptr, classID);
 }
+CourseStatus courseNode::setNullPointer(int classID)
+{
+    return (CourseStatus)this->array->updateNull(classID);
+}
 
 bool courseNode::operator<(const courseNode &courseToCompare) const
 {

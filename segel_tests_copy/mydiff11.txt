@@ -1,0 +1,35 @@
+1,16c1,16
+< init done.
+< AddCourse: SUCCESS
+< AddCourse: SUCCESS
+< AddClass: 0
+< AddClass: 1
+< AddClass: 0
+< AddClass: FAILURE
+< WatchClass: SUCCESS
+< TimeViewed: 10
+< WatchClass: SUCCESS
+< TimeViewed: 20
+< GetIthWatchedClass: INVALID_INPUT
+< GetIthWatchedClass: 234247 0
+< GetIthWatchedClass: FAILURE
+< GetIthWatchedClass: 234218 1
+< quit done.
+\ No newline at end of file
+---
+> 
+> New capacity: 32
+> 
+> New capacity: 64
+> 
+> New capacity: 128
+> 
+> New capacity: 256
+> 
+> New capacity: 512
+> 
+> New capacity: 1024
+> 
+> New capacity: 2048
+> 16
+> 0

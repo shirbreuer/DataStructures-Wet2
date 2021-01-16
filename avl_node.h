@@ -31,6 +31,7 @@ public:
     void setLeft(avlNode<T> *new_left);
     void setRight(avlNode<T> *new_right);
     void setParent(avlNode<T> *new_parent);
+    void setRank(int new_rank) { this->rank = new_rank; }
     void setHeightAndRank();
     void print() const;
     int getHeight();

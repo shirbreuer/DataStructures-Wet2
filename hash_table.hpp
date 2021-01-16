@@ -47,8 +47,8 @@ hashTable<T>::~hashTable()
     for (int i = 0; i < getCapacity(); i++)
     {
         if (*(hash_array + i) != nullptr) {
-            // std::cout << i << " list" << std::endl;
-            delete *(hash_array + i);
+            hash_array[i]->emptyList();
+            delete hash_array[i];
         }
     }
     delete[] hash_array;
@@ -80,8 +80,10 @@ void hashTable<T>::hashSetNullptr(int size)
 template <class T>
 hashTableResult hashTable<T>::add(T* element)
 {
+    if (!element)
+        return HASH_TABLE_INVALID_INPUT;
     // std::cout <<"trying to add" << std::endl;
-    if (find(element) != nullptr)
+    if (find(element->getKey()) != nullptr)
         return HASH_TABLE_FAILURE;
     // std::cout <<"not found" << std::endl;
 
@@ -89,10 +91,11 @@ hashTableResult hashTable<T>::add(T* element)
     updateLoadFactor();
     resize(INCREASE_SIZE);
     int hashedIndex = element->getKey()%this->getCapacity();
-    if (*(hash_array + hashedIndex) == nullptr)
-        *(hash_array + hashedIndex) = new twList<T*>();
-    (*(hash_array + hashedIndex))->addFirst(element);
+    if (hash_array[hashedIndex] == nullptr)
+        hash_array[hashedIndex] = new twList<T*>();
+    (hash_array[hashedIndex])->addFirst(element);
     // std::cout << *(*(hash_array + hashedIndex)) << std::endl;
+    updateLoadFactor();
     return HASH_TABLE_SUCCESS;
 }
 
@@ -148,8 +151,11 @@ hashTableResult hashTable<T>::remove(T* element)
     this->size--;
     updateLoadFactor();
     int hashedIndex = element->getKey()%this->getCapacity();
-    (*(hash_array + hashedIndex))->remove(element_node_to_remove);
+    if (element_node_to_remove->getValue())
+        delete element_node_to_remove->getValue();
+    hash_array[hashedIndex]->remove(element_node_to_remove);
     resize(DECREASE_SIZE);
+    updateLoadFactor();
     return HASH_TABLE_SUCCESS;
 }
 
@@ -280,10 +286,12 @@ static void decreaseSize(hashTable<T> *table)
 template <class T>
 void hashTable<T>::transfer(T* element)
 {
+    if (!element || !element->getKey())
+        return;
     int hashedIndex = element->getKey()%this->getCapacity();
-    if (*(hash_array + hashedIndex) == nullptr)
-        *(hash_array + hashedIndex) = new twList<T*>();
-    (*(hash_array + hashedIndex))->addFirst(element);
+    if (hash_array[hashedIndex] == nullptr)
+        hash_array[hashedIndex] = new twList<T*>();
+    hash_array[hashedIndex]->addFirst(element);
 }
 
 

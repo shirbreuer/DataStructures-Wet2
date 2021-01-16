@@ -4,7 +4,7 @@
 #include "avl_node.h"
 
 template <class T>
-avlNode<T>::avlNode(T* const value) : data(value), left(NULL), right(NULL), parent(NULL)
+avlNode<T>::avlNode(T *const value) : data(value), left(NULL), right(NULL), parent(NULL)
 {
 }
 
@@ -36,19 +36,19 @@ avlNode<T> *avlNode<T>::getParent()
 }
 
 template <class T>
-T* avlNode<T>::getValue()
+T *avlNode<T>::getValue()
 {
     return this->data;
 }
 
 template <class T>
-void avlNode<T>::setValue(T* const value)
+void avlNode<T>::setValue(T *const value)
 {
     this->data = value;
 }
 
 template <class T>
-const T* avlNode<T>::getValue() const
+const T *avlNode<T>::getValue() const
 {
     return this->data;
 }
@@ -176,29 +176,29 @@ void avlNode<T>::swapWithChild(avlNode<T> *node, bool is_right)
         this->setRight(temp_right);
         this->setLeft(temp_left);
     }
+    int temp = this->getRank();
+    this->setRank(node->getRank());
+    node->setRank(temp);
     if (temp_this_left != node->getLeft())
         exit(2);
 }
 
 template <class T>
 void avlNode<T>::setHeightAndRank()
-    {
+{
     int leftHeight = this->getLeft() ? this->getLeft()->getHeight() : -1;
     int rightHeight = this->getRight() ? this->getRight()->getHeight() : -1;
     int leftRank = this->getLeft() ? this->getLeft()->getRank() : 0;
     int rightRank = this->getRight() ? this->getRight()->getRank() : 0;
     this->height = 1 + ((leftHeight > rightHeight) ? leftHeight : rightHeight);
     this->rank = 1 + leftRank + rightRank;
-    }
-
-
+}
 
 template <class T>
 void avlNode<T>::print() const
 {
     std::cout << data << std::endl;
 }
-
 
 template <class T>
 int avlNode<T>::getHeight()
@@ -212,5 +212,24 @@ int avlNode<T>::getRank()
     return this->rank;
 }
 
+template <class T>
+avlNode<T> *select(avlNode<T> *root, int k)
+{
+    if (!root)
+        return nullptr;
+    if (k > root->getRank())
+        return nullptr;
+
+    int wanted_index = k;
+
+    int current_left_rank = root->getLeft() ? root->getLeft()->getRank() : 0;
+
+    if (current_left_rank == wanted_index - 1)
+        return root;
+    else if (current_left_rank > wanted_index - 1)
+        return select(root->getLeft(), wanted_index);
+    else
+        return select(root->getRight(), wanted_index - current_left_rank - 1);
+}
 
 #endif

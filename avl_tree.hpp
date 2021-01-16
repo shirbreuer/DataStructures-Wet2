@@ -142,7 +142,7 @@ avlTreeResult_t avlTree<T>::remove(T *const value)
 {
     if (!root)
     {
-        std::cout << "no root" << std::endl;
+        // std::cout << "no root" << std::endl;
         return AVL_TREE_INVALID_INPUT;
     }
 
@@ -228,13 +228,19 @@ void avlTree<T>::removeNodeWithParent(avlNode<T> *node_to_remove, int first_call
     {
         recursiveSetHeightAndRank(parent->getRight());
         if (first_call)
+        {
             treeBalance(parent->getRight());
+            recursiveSetHeightAndRank(parent->getRight());
+        }
     }
     else
     {
         recursiveSetHeightAndRank(parent->getLeft());
         if (first_call)
+        {
             treeBalance(parent->getLeft());
+            recursiveSetHeightAndRank(parent->getLeft());
+        }
     }
 }
 
@@ -292,8 +298,6 @@ avlNode<T> *avlTree<T>::createNewSubTree(avlNode<T> *node)
     }
     if ((!node->getRight()) && (!node->getLeft()))
     {
-        // printCourseNode(node);
-        // std::cout << "this is a leaf" << std::endl;
         return NULL;
     }
     if (node->getRight())
@@ -350,6 +354,9 @@ void avlTree<T>::swap(avlNode<T> *src, avlNode<T> *dst)
         avlNode<T> temp_dst = *dst;
         src->copyFrom(&temp_dst);
         dst->copyFrom(&temp_src);
+        int temp = dst->getRank();
+        dst->setRank(src->getRank());
+        src->setRank(temp);
     }
 }
 
@@ -956,48 +963,33 @@ int avlTree<T>::reverseInOrder(int m, void (*function)(avlNode<T> *, int *, int 
 // template <class T>
 // avlNode<T> *avlTree<T>::select(int k)
 // {
-//     if (k > root.getIndex())
+//     if (!this->getRoot())
+//         return nullptr;
+//     if (k > root->getRank())
 //     {
 //         return nullptr;
 //     }
 //     int wanted_index = k;
-//     avlNode<T> current_node = this->getRoot();
-//     int current_left_rank = this->getLeft() ? current_node.getLeft().getRank() : 0;
-//     while (current_left_rank != wanted_index)
+//     avlNode<T> *current_node = this->getRoot();
+//     int current_left_rank = current_node->getLeft() ? current_node->getLeft()->getRank() : 0;
+//     while (current_left_rank != wanted_index - 1)
 //     {
-//         if (current_left_rank > k - 1)
+//         if (current_left_rank > wanted_index - 1)
 //         {
-//             current_node = current_node.getLeft();
+//             current_node = current_node->getLeft();
 //         }
 //         else
 //         {
 //             wanted_index -= (current_left_rank + 1);
-//             current_node = current_node.getRight();
+//             if (current_node->getRight())
+//                 current_node = current_node->getRight();
+//         }
+//         // if (!current_node)
+//         //     return nullptr;
+//         current_left_rank = current_node->getLeft() ? current_node->getLeft()->getRank() : 0;
 
-template <class T>
-avlNode<T> *avlTree<T>::select(int k)
-{
-    if (k > root->getRank())
-    {
-        return nullptr;
-    }
-    int wanted_index = k;
-    avlNode<T> *current_node = this->getRoot();
-    int current_left_rank = current_node->getLeft() ? current_node->getLeft()->getRank() : 0;
-    while (current_left_rank != wanted_index - 1)
-    {
-        if (current_left_rank > wanted_index - 1)
-        {
-            current_node = current_node->getLeft();
-        }
-        else
-        {
-            wanted_index -= (current_left_rank + 1);
-            current_node = current_node->getRight();
-        }
-        current_left_rank = current_node->getLeft() ? current_node->getLeft()->getRank() : 0;
-    }
-    return current_node;
-}
+//     }
+//     return current_node;
+// }
 
 #endif

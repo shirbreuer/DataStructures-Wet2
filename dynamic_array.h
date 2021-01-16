@@ -46,6 +46,7 @@ public:
     void setArray(T **new_array) { this->dynamic_array = new_array; }
     DynamicArrayResult add(T * element);
     DynamicArrayResult update(T * element, const int key);
+    DynamicArrayResult updateNull(const int key);
     T *find(const int key);
     bool resize();
     // bool resizeRequired(int size_change);

@@ -9,4 +9,8 @@ WatchClass: SUCCESS
 TimeViewed: 10
 WatchClass: SUCCESS
 TimeViewed: 20
+GetIthWatchedClass: INVALID_INPUT
+GetIthWatchedClass: 234247 0
+GetIthWatchedClass: FAILURE
+GetIthWatchedClass: 234218 1
 quit done.

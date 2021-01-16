@@ -21,7 +21,7 @@ private:
     hashTable<courseNode>* courses;
     avlTree<classNode>* classes;
     // avlTree<twList<int>>* lists;
-    int classes_counter = 0;
+    // int classes_counter = 0;
 
 public:
     courseManager();

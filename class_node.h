@@ -16,7 +16,7 @@ public:
     classNode(const classNode &other);
     classNode(const int course_id, const int class_id, void *parent, int time);
     classNode(const int course_id, const int class_id);
-    ~classNode() = default;
+    ~classNode();
     int getTime() { return this->time; }
     int getKey() { return this->class_id; }
     void setTime(int new_time) { this->time = new_time; }

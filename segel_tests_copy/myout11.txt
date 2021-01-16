@@ -5,17 +5,12 @@ AddClass: 0
 AddClass: 1
 AddClass: 0
 AddClass: FAILURE
-1
 WatchClass: SUCCESS
 TimeViewed: 10
-2
 WatchClass: SUCCESS
 TimeViewed: 20
 GetIthWatchedClass: INVALID_INPUT
-2
 GetIthWatchedClass: 234247 0
-2
 GetIthWatchedClass: FAILURE
-2
 GetIthWatchedClass: 234218 1
 quit done.

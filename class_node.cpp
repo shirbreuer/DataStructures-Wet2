@@ -15,6 +15,9 @@ classNode::classNode(const classNode &other)
 {
 }
 
+classNode::~classNode()
+{}
+
 classNode &classNode::operator=(const classNode &other)
 {
     this->parent = other.parent;

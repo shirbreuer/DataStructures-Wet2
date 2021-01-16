@@ -1,0 +1,16 @@
+673c673
+< GetIthWatchedClass: FAILURE
+---
+> GetIthWatchedClass: 3574539 8
+2631c2631
+< GetIthWatchedClass: 6310214 8
+---
+> GetIthWatchedClass: 3331285 0
+4002c4002
+< GetIthWatchedClass: 8481800 3
+---
+> GetIthWatchedClass: 3591497 1
+4186c4186
+< GetIthWatchedClass: 4866905 1
+---
+> GetIthWatchedClass: 4987200 8

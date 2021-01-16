@@ -42,12 +42,10 @@ StatusType TimeViewed(void *DS, int courseID, int classID, int *timeViewed)
     return ((courseManager *)DS)->TimeViewed(courseID, classID, timeViewed);
 }
 
-StatusType GetIthWatchedClass(void *DS, int numOfClasses, int *courses, int *classes)
+StatusType GetIthWatchedClass(void *DS, int i, int *courseID, int *classID)
 {
     DataStructureIsValid(DS);
-    std::cout << "GetIthWatchedClass" << std::endl;
-    return SUCCESS;
-    return ((courseManager *)DS)->GetIthWatchedClass(numOfClasses, courses, classes);
+    return ((courseManager *)DS)->GetIthWatchedClass(i, courseID, classID);
 }
 
 void Quit(void** DS)

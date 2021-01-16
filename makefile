@@ -72,7 +72,7 @@ call:
 
 test:
 	./a.out < segel_tests/in$(v).txt > segel_tests/myout$(v).txt
-	diff segel_tests/out$(v).txt segel_tests/myout$(v).txt > segel_tests/mydiff$(v).txt
+	diff segel_tests/hodoutput$(v).txt segel_tests/myout$(v).txt > segel_tests/mydiff$(v).txt
 
 try:
 	number=1 ; while [[ $$number -le 10 ]] ; do \
@@ -87,10 +87,9 @@ try:
 try_val:
 	number=1 ; while [[ $$number -le 10 ]] ; do \
 	echo -e "${LGHT_BLU}test number $$number: ${NC}" ; \
-	make val v=$$number; \
+	make val v=$$number 2>&1 >/dev/null | grep "ERROR SUMMARY"; \
 	((number = number + 1)) ; \
 	done
-#	make val v=$$number 2>&1 >/dev/null | grep "ERROR SUMMARY"; \
 
 try_valv:
 	number=1 ; while [[ $$number -le 10 ]] ; do \

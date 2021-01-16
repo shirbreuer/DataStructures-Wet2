@@ -29,8 +29,9 @@ DynamicArray<T>::~DynamicArray()
     int num_of_elements = getSize();
     for (int i = 0; i < num_of_elements; i++)
     {
-        if (dynamic_array[i]->getValue()->getTime() == 0)
-           deleteNode(dynamic_array[i]);
+        if (dynamic_array[i] && dynamic_array[i]->getValue())
+            if (dynamic_array[i]->getValue()->getTime() == 0)
+                deleteNode(dynamic_array[i]);
     }
     delete[] dynamic_array;
 }
@@ -66,9 +67,25 @@ DynamicArrayResult DynamicArray<T>::update(T *element, const int key)
 {
     if (element == NULL)
         return DYNAMIC_ARRAY_INVALID_INPUT;
-    if (key > size)
+    if (key > size || key < 0)
         return DYNAMIC_ARRAY_INVALID_INPUT;
     dynamic_array[key] = element;
+    return DYNAMIC_ARRAY_SUCCESS;
+}
+
+/**
+ * update element in the array if it is already in it.
+ * @tparam T
+ * @param element element to add to the array
+ * @param function dynamic function to perform
+ * @returns DynamicArrayResult
+*/
+template <class T>
+DynamicArrayResult DynamicArray<T>::updateNull(const int key)
+{
+    if (key > size || key < 0)
+        return DYNAMIC_ARRAY_INVALID_INPUT;
+    dynamic_array[key] = NULL;
     return DYNAMIC_ARRAY_SUCCESS;
 }
 

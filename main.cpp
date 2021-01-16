@@ -293,7 +293,7 @@ static errorType OnQuit(void** DS, const char* const command) {
     };
 
     isInit = false;
-    printf("quit done.");
+    printf("quit done.\n");
     return error_free;
 }
 

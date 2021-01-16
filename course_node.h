@@ -44,6 +44,7 @@ public:
     DynamicArray<avlNode<classNode>> *getHashTable() { return this->array; }
     DynamicArray<avlNode<classNode>> *const getHashTable() const { return this->array; }
     CourseStatus setClassPointer(int classID, avlNode<classNode> *class_ptr);
+    CourseStatus setNullPointer(int classID);
 };
 
 #endif
