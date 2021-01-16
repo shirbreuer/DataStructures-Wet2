@@ -19,31 +19,19 @@ StatusType courseManager::AddCourse(int courseID)
     if (!new_course)
         return (StatusType)HASH_TABLE_OUT_OF_MEMORY;
 
-    return (StatusType)getCourses()->add(*new_course);
-}
-
-void printCourseNode2(avlNode<courseNode> *node)
-{
-    std::cout << "=========================" << std::endl;
-    std::cout << "left child of: " << node->getValue()->getKey() << " is: " << (node->getLeft() ? node->getLeft()->getValue()->getKey() : -1) << std::endl;
-    std::cout << "Right child of: " << node->getValue()->getKey() << " is: " << (node->getRight() ? node->getRight()->getValue()->getKey() : -1) << std::endl;
-    std::cout << "parent of: " << node->getValue()->getKey() << " is: " << (node->getParent() ? node->getParent()->getValue()->getKey() : -1) << std::endl;
-    if (node->getParent())
-    {
-        if (node->isLeftChild())
-            std::cout << node->getValue()->getKey() << " is left child" << std::endl;
-        else
-            std::cout << node->getValue()->getKey() << " is right child" << std::endl;
-    }
-    std::cout << "=========================" << std::endl;
+    StatusType add_result = (StatusType)getCourses()->add(new_course);
+    if (add_result != SUCCESS)
+        delete new_course;
+    return add_result;
 }
 
 void printCourseNode2(avlNode<classNode> *node)
 {
     std::cout << "=========================" << std::endl;
-    std::cout << "left child of: " << node->getValue()->getKey() << " is: " << (node->getLeft() ? node->getLeft()->getValue()->getKey() : -1) << std::endl;
-    std::cout << "Right child of: " << node->getValue()->getKey() << " is: " << (node->getRight() ? node->getRight()->getValue()->getKey() : -1) << std::endl;
-    std::cout << "parent of: " << node->getValue()->getKey() << " is: " << (node->getParent() ? node->getParent()->getValue()->getKey() : -1) << std::endl;
+    std::cout << "left child of " << node->getValue()->getKey() << " is: " << (node->getLeft() ? node->getLeft()->getValue()->getKey() : -1) << std::endl;
+    std::cout << "Right child of " << node->getValue()->getKey() << " is: " << (node->getRight() ? node->getRight()->getValue()->getKey() : -1) << std::endl;
+    std::cout << "parent of " << node->getValue()->getKey() << " is: " << (node->getParent() ? node->getParent()->getValue()->getKey() : -1) << std::endl;
+    std::cout << "time of " << node->getValue()->getKey() << " is: " << node->getValue()->getTime() << std::endl;
     if (node->getParent())
     {
         if (node->isLeftChild())
@@ -59,14 +47,14 @@ StatusType courseManager::RemoveCourse(int courseID)
     if (courseID <= 0)
         return INVALID_INPUT;
 
-    twListNode<courseNode> *course_pointer = this->getCourses()->find(courseID);
+    twListNode<courseNode *> *course_pointer = this->getCourses()->find(courseID);
     if (!course_pointer)
         return FAILURE;
 
-    int number_of_classes = course_pointer->getValue().getNumOfClasses();
+    int number_of_classes = course_pointer->getValue()->getNumOfClasses();
     for (int i = 0; i < number_of_classes; i++)
     {
-        avlNode<classNode> *class_to_remove = course_pointer->getValue().getClass(i);
+        avlNode<classNode> *class_to_remove = course_pointer->getValue()->getClass(i);
         if (class_to_remove)
         {
             if (class_to_remove->getValue()->getTime() == 0) //class is not inside classes tree.
@@ -90,10 +78,10 @@ StatusType courseManager::AddClass(int courseID, int *classID)
     if (courseID <= 0)
         return INVALID_INPUT;
 
-    twListNode<courseNode> *course_pointer = this->getCourses()->find(courseID);
+    twListNode<courseNode *> *course_pointer = this->getCourses()->find(courseID);
     if (!course_pointer)
         return FAILURE;
-    int curr_class_count = course_pointer->getValue().getNumOfClasses();
+    int curr_class_count = course_pointer->getValue()->getNumOfClasses();
     classNode *new_class_pointer = new classNode(courseID, curr_class_count);
     if (!new_class_pointer)
         return (StatusType)HASH_TABLE_OUT_OF_MEMORY;
@@ -104,11 +92,11 @@ StatusType courseManager::AddClass(int courseID, int *classID)
         return (StatusType)HASH_TABLE_OUT_OF_MEMORY;
     }
 
-    StatusType return_result = (StatusType)course_pointer->getValue().setClassPointer(curr_class_count, new_avl_node);
+    StatusType return_result = (StatusType)course_pointer->getValue()->setClassPointer(curr_class_count, new_avl_node);
     if (return_result == SUCCESS)
     {
-        course_pointer->getValue().setNumOfClasses(curr_class_count + 1);
-        *classID = curr_class_count + 1;
+        course_pointer->getValue()->setNumOfClasses(curr_class_count + 1);
+        *classID = curr_class_count;
     }
     return return_result;
 }
@@ -118,15 +106,15 @@ StatusType courseManager::TimeViewed(int courseID, int classID, int *timeViewed)
     if (courseID <= 0 || classID < 0)
         return INVALID_INPUT;
 
-    twListNode<courseNode> *course_pointer = this->getCourses()->find(courseID);
+    twListNode<courseNode *> *course_pointer = this->getCourses()->find(courseID);
     if (!course_pointer)
         return FAILURE;
 
-    int classes_num = course_pointer->getValue().getNumOfClasses();
+    int classes_num = course_pointer->getValue()->getNumOfClasses();
     if (classID + 1 > classes_num)
         return INVALID_INPUT;
 
-    avlNode<classNode> *class_pointer = course_pointer->getValue().getClass(classID);
+    avlNode<classNode> *class_pointer = course_pointer->getValue()->getClass(classID);
     *timeViewed = class_pointer->getValue()->getTime();
 
     return SUCCESS;
@@ -136,44 +124,69 @@ StatusType courseManager::WatchClass(int courseID, int classID, int time)
 {
     if (courseID <= 0 || classID < 0 || time <= 0)
     {
+        // std::cout << "11111############################" << std::endl;
         return INVALID_INPUT;
     }
 
-    twListNode<courseNode> *wanted_course = this->getCourses()->find(courseID);
+    twListNode<courseNode *> *wanted_course = this->getCourses()->find(courseID);
     if (!wanted_course)
     {
         return FAILURE;
     }
-    int classes_num = wanted_course->getValue().getNumOfClasses();
+    int classes_num = wanted_course->getValue()->getNumOfClasses();
     if (classID + 1 > classes_num)
+    {
+        // std::cout << "22222222############################" << std::endl;
         return INVALID_INPUT;
-
-    avlNode<classNode> *ptr = wanted_course->getValue().getClass(classID);
+    }
+    avlNode<classNode> *ptr = wanted_course->getValue()->getClass(classID);
     if (!ptr)
         exit(3);
     int curr_time = ptr->getValue()->getTime();
-    if (curr_time == 0)
+    // if (curr_time == 0)
+    // {
+    //     ptr->getValue()->setTime(time);
+    //     std::cout << "############################" << std::endl;
+    //     std::cout << ptr->getValue()->getTime() << std::endl;
+    //     return (StatusType)this->getClasses()->insertAvlNode(this->getClasses()->getRoot(), ptr);
+    // }
+    // else
+    // {
+
+        
+    classNode *new_class = new classNode(*(ptr->getValue()));
+    if (!new_class)
+        return (StatusType)AVL_TREE_OUT_OF_MEMORY;
+    new_class->setTime(curr_time + time);
+    if (curr_time > 0)
     {
-        ptr->getValue()->setTime(time);
-        return (StatusType)this->getClasses()->insertAvlNode(this->getClasses()->getRoot(), ptr);
+        avlTreeResult_t remove_old_class_result = this->getClasses()->removeWOFreeing((ptr->getValue()));
+        if (remove_old_class_result != AVL_TREE_SUCCESS)
+        {
+            // std::cout << "333333333############################" << std::endl;
+            return (StatusType)remove_old_class_result;
+        }
+    }
+    deleteNode(ptr);
+    avlTreeResult_t insert_class_result = this->getClasses()->insert(new_class);
+    if (insert_class_result != AVL_TREE_SUCCESS)
+    {
+        // std::cout << "4444444444############################" << std::endl;
+        return (StatusType)insert_class_result;
     }
     else
     {
-        classNode *new_class = new classNode(*(ptr->getValue()));
-        if (!new_class)
-            return (StatusType)AVL_TREE_OUT_OF_MEMORY;
-        new_class->setTime(curr_time + time);
-        avlTreeResult_t remove_old_class_result = this->getClasses()->remove((ptr->getValue()));
-        if (remove_old_class_result != AVL_TREE_SUCCESS)
-            return (StatusType)remove_old_class_result;
-        avlTreeResult_t insert_class_result = this->getClasses()->insert(new_class);
-        if (insert_class_result != AVL_TREE_SUCCESS)
-            return (StatusType)insert_class_result;
-        else
-        {
-            avlNode<classNode> *class_pointer = find(this->getClasses()->getRoot(), new_class);
-            return (StatusType)wanted_course->getValue().setClassPointer(classID, class_pointer);
-        }
+        avlNode<classNode> *class_pointer = find(this->getClasses()->getRoot(), new_class);
+        // std::cout << "555555################################" << std::endl;
+        // printCourseNode2(class_pointer);
+        // return (StatusType)wanted_course->getValue().setClassPointer(classID, class_pointer);
+        StatusType res = (StatusType)wanted_course->getValue()->setClassPointer(classID, class_pointer);
+        // std::cout << "66666555555################################" << std::endl;
+        // avlNode<classNode> *res_ptr = wanted_course->getValue().getClass(classID);
+        // printCourseNode2(res_ptr);
+        return res;
+
+        // }
     }
 }
 

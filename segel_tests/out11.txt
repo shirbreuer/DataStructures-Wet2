@@ -1,0 +1,12 @@
+init done.
+AddCourse: SUCCESS
+AddCourse: SUCCESS
+AddClass: 0
+AddClass: 1
+AddClass: 0
+AddClass: FAILURE
+WatchClass: SUCCESS
+TimeViewed: 10
+WatchClass: SUCCESS
+TimeViewed: 20
+quit done.

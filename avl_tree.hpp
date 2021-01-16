@@ -37,20 +37,20 @@ avlTree<T>::~avlTree()
     postOrder(root, deleteNode);
 }
 
-inline void deleteNodeWOFreeing(avlNode<twList<int>> *node)
+inline void deleteNodeWOFreeing(avlNode<classNode> *node)
 {
     if (!node)
         return;
     delete node;
 }
 
-template <>
-inline avlTree<twList<int>>::~avlTree()
-{
-    if (!root)
-        return;
-    postOrder(root, deleteNodeWOFreeing);
-}
+// template <>
+// inline avlTree<twList<int>>::~avlTree()
+// {
+//     if (!root)
+//         return;
+//     postOrder(root, deleteNodeWOFreeing);
+// }
 
 template <class T>
 void print(avlNode<T> *root)
@@ -141,7 +141,10 @@ template <class T>
 avlTreeResult_t avlTree<T>::remove(T *const value)
 {
     if (!root)
+    {
+        std::cout << "no root" << std::endl;
         return AVL_TREE_INVALID_INPUT;
+    }
 
     avlNode<T> *node_to_remove = find(this->root, value);
 
@@ -950,38 +953,45 @@ int avlTree<T>::reverseInOrder(int m, void (*function)(avlNode<T> *, int *, int 
     return (m - i);
 }
 
+// template <class T>
+// avlNode<T> *avlTree<T>::select(int k)
+// {
+//     if (k > root.getIndex())
+//     {
+//         return nullptr;
+//     }
+//     int wanted_index = k;
+//     avlNode<T> current_node = this->getRoot();
+//     int current_left_rank = this->getLeft() ? current_node.getLeft().getRank() : 0;
+//     while (current_left_rank != wanted_index)
+//     {
+//         if (current_left_rank > k - 1)
+//         {
+//             current_node = current_node.getLeft();
+//         }
+//         else
+//         {
+//             wanted_index -= (current_left_rank + 1);
+//             current_node = current_node.getRight();
+
 template <class T>
 avlNode<T> *avlTree<T>::select(int k)
 {
-    if (k > root.getIndex())
+    if (k > root->getRank())
     {
         return nullptr;
     }
     int wanted_index = k;
-    avlNode<T> current_node = this->getRoot();
-    int current_left_rank = this->getLeft() ? current_node.getLeft().getRank() : 0;
-    while (current_left_rank != wanted_index)
+    avlNode<T> *current_node = this->getRoot();
+    int current_left_rank = current_node->getLeft() ? current_node->getLeft()->getRank() : 0;
+    while (current_left_rank != wanted_index - 1)
     {
-        if (current_left_rank > k - 1)
+        if (current_left_rank > wanted_index - 1)
         {
-            current_node = current_node.getLeft();
+            current_node = current_node->getLeft();
         }
         else
         {
-            wanted_index -= (current_left_rank + 1);
-            current_node = current_node.getRight();
-avlNode<T>* avlTree<T>::select (int k){
-    if (k > root->getRank()){
-        return nullptr;
-    }
-    int wanted_index = k;
-    avlNode<T>* current_node = this->getRoot();
-    int current_left_rank = current_node->getLeft() ? current_node->getLeft()->getRank() : 0;
-    while(current_left_rank != wanted_index-1){
-        if(current_left_rank > wanted_index-1){
-            current_node = current_node->getLeft();
-        }
-        else {
             wanted_index -= (current_left_rank + 1);
             current_node = current_node->getRight();
         }

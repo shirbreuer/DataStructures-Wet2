@@ -181,8 +181,9 @@ twListNode<T>* twList<T>::contains(const int key)
     twListNode<T> *iter = this->getHead();
     while (iter != this->getTail())
     {
-        if (iter->getValue().getKey() == key)
-            return iter;
+        if (iter->getValue())
+            if (iter->getValue()->getKey() == key)
+                return iter;
         iter = iter->getNext();
     }
     return nullptr;
@@ -198,7 +199,8 @@ twList<T>::~twList()
         twListNode<T> *curr = from->getNext();
         from->setNext(curr->getNext());
         from->getNext()->setPrev(from);
-        delete (curr);
+        delete curr->getValue();
+        delete curr;
     }
     delete (tail);
     delete (head);

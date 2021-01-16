@@ -1,7 +1,7 @@
 /****************************************************************************/
 /*                                                                          */
 /* This file contains the interface functions                               */
-/* you should use for the wet ex 1                                          */
+/* you should use for the wet ex 2                                          */
 /*                                                                          */
 /****************************************************************************/
 
@@ -30,15 +30,17 @@ typedef enum {
 
 void *Init();
 
-StatusType AddCourse (void *DS, int courseID, int numOfClasses);
+StatusType AddCourse(void* DS, int courseID);
 
 StatusType RemoveCourse(void *DS, int courseID);
+
+StatusType AddClass(void* DS, int courseID, int* classID);
 
 StatusType WatchClass(void *DS, int courseID, int classID, int time);
 
 StatusType TimeViewed(void *DS, int courseID, int classID, int *timeViewed);
 
-StatusType GetMostViewedClasses(void *DS, int numOfClasses, int *courses, int *classes);
+StatusType GetIthWatchedClass(void* DS, int i, int* courseID, int* classID);
 
 void Quit(void** DS);
 

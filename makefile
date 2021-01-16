@@ -10,7 +10,7 @@ DEBUG_FLAG = -DNDEBUG
 
 #    .---------- constant part!
 #    vvvv vvvv-- the code from above
-RED=\033[1;34m
+LGHT_BLU=\033[1;34m
 NC=\033[0m # No Color
 
 
@@ -76,23 +76,26 @@ test:
 
 try:
 	number=1 ; while [[ $$number -le 10 ]] ; do \
-	echo -e "${RED}test number $$number: ${NC}" ; \
-	make test v=$$number 2>&1 >/dev/null | grep "ERROR"; \
+	echo -e "${LGHT_BLU}test number $$number: ${NC}" ; \
+	make test v=$$number; \
 	((number = number + 1)) ; \
 	done
+
+# make test v=$$number 2>&1 >/dev/null | grep "ERROR"; \
 
 
 try_val:
 	number=1 ; while [[ $$number -le 10 ]] ; do \
-	echo -e "${RED}test number $$number: ${NC}" ; \
-	make val v=$$number 2>&1 >/dev/null | grep "ERROR SUMMARY"; \
+	echo -e "${LGHT_BLU}test number $$number: ${NC}" ; \
+	make val v=$$number; \
 	((number = number + 1)) ; \
 	done
+#	make val v=$$number 2>&1 >/dev/null | grep "ERROR SUMMARY"; \
 
 try_valv:
 	number=1 ; while [[ $$number -le 10 ]] ; do \
-	echo -e "${RED}test number $$number: ${NC}" ; \
-	make valv v=$$number 2>&1 >/dev/null | grep "ERROR SUMMARY"; \
+	echo -e "${LGHT_BLU}test number $$number: ${NC}" ; \
+	make valv v=$$number; \
 	((number = number + 1)) ; \
 	done
-
+	# make valv v=$$number 2>&1 >/dev/null | grep "ERROR SUMMARY"; \

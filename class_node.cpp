@@ -6,7 +6,7 @@ classNode::classNode(const int course_id, const int class_id, void *parent, int 
 }
 
 classNode::classNode(const int course_id, const int class_id)
-    : course_id(course_id), class_id(class_id)
+    : course_id(course_id), class_id(class_id), parent(NULL), time(0)
 {
 }
 

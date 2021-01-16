@@ -34,7 +34,7 @@ class hashTable
     float low_load_factor;  //hold table's lower bound load factor
     float high_load_factor; //hold table's higher bound load factor
 
-    twList<T> **hash_array;
+    twList<T*> **hash_array;
 
 public:
     hashTable();
@@ -46,7 +46,7 @@ public:
     float getLowFactor() { return this->low_load_factor; }
     float getHighFactor() { return this->high_load_factor; }
     float getFactor() { return this->load_factor; }
-    twList<T> **getArray() { return this->hash_array; }
+    twList<T*> **getArray() { return this->hash_array; }
     int getCapacity() { return this->capacity; }
 
     //setters
@@ -55,17 +55,17 @@ public:
     void setLowFactor(float new_low_factor) { this->low_load_factor = new_low_factor; }
     void setHighFactor(float new_high_factor) { this->high_load_factor = new_high_factor; }
     void setFactor(float new_factor) { this->load_factor = new_factor; }
-    void setArray(twList<T> **new_table) { this->hash_array = new_table; }
+    void setArray(twList<T*> **new_table) { this->hash_array = new_table; }
 
-    hashTableResult add(const T &element);
-    hashTableResult remove(const T &element);
-    twListNode<T> *find(const T &element);
-    twListNode<T> *find(const int key);
+    hashTableResult add(T* element);
+    hashTableResult remove(T* element);
+    twListNode<T*> *find(T* element);
+    twListNode<T*> *find(const int key);
 
     void resize(int size_change);
     bool resizeRequired(int size_change);
     void updateLoadFactor();
-    void transfer(const T &element);
+    void transfer(T* element);
 
     void hashSetNullptr(int size);
 };

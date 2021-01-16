@@ -1,4 +1,4 @@
-#include "library.h"
+#include "library2.h"
 #include "data_structure.h"
 
 #define DataStructureIsValid(DS) \
@@ -23,11 +23,18 @@ StatusType RemoveCourse(void *DS, int courseID)
     return ((courseManager *)DS)->RemoveCourse(courseID);
 }
 
-// StatusType WatchClass(void *DS, int courseID, int classID, int time)
-// {
-//     DataStructureIsValid(DS);
-//     return ((courseManager *)DS)->WatchClass(courseID, classID, time);
-// }
+StatusType AddClass(void *DS, int courseID, int* classID)
+{
+    DataStructureIsValid(DS);
+    return ((courseManager *)DS)->AddClass(courseID, classID);
+}
+
+
+StatusType WatchClass(void *DS, int courseID, int classID, int time)
+{
+    DataStructureIsValid(DS);
+    return ((courseManager *)DS)->WatchClass(courseID, classID, time);
+}
 
 StatusType TimeViewed(void *DS, int courseID, int classID, int *timeViewed)
 {
@@ -35,16 +42,18 @@ StatusType TimeViewed(void *DS, int courseID, int classID, int *timeViewed)
     return ((courseManager *)DS)->TimeViewed(courseID, classID, timeViewed);
 }
 
-// StatusType GetMostViewedClasses(void *DS, int numOfClasses, int *courses, int *classes)
-// {
-//     DataStructureIsValid(DS);
-//     return ((courseManager *)DS)->GetMostViewedClasses(numOfClasses, courses, classes);
-// }
+StatusType GetIthWatchedClass(void *DS, int numOfClasses, int *courses, int *classes)
+{
+    DataStructureIsValid(DS);
+    std::cout << "GetIthWatchedClass" << std::endl;
+    return SUCCESS;
+    return ((courseManager *)DS)->GetIthWatchedClass(numOfClasses, courses, classes);
+}
 
 void Quit(void** DS)
 {
     if (!(DS))
         return;
     delete ((courseManager *)*DS);
-    *DS = nullptr;
+    *DS = NULL;
 }

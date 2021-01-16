@@ -24,10 +24,10 @@ template <class T>
 class DynamicArray
 {
     // Data members
-    int size;          // hold current amount of entries inside Dynamic Array
-    int capacity;      //hold current max capacity of Dynamic Array
+    int size;               // hold current amount of entries inside Dynamic Array
+    int capacity;           //hold current max capacity of Dynamic Array
     float high_load_factor; //hold table's higher bound load factor
-    T** dynamic_array;
+    T **dynamic_array;
 
 public:
     DynamicArray();
@@ -36,19 +36,20 @@ public:
     //getters
     int getSize() { return this->size; }
     float getHighFactor() { return this->high_load_factor; }
-    T** getArray() { return this->dynamic_array; }
+    T **getArray() { return this->dynamic_array; }
     int getCapacity() { return this->capacity; }
 
     //setters
     void setSize(int new_size) { this->size = new_size; }
     void setCapacity(int new_capacity) { this->capacity = new_capacity; }
     void setHighFactor(float new_high_factor) { this->high_load_factor = new_high_factor; }
-    void setArray(T** new_array) { this->dynamic_array = new_array; }
-    DynamicArrayResult add(const T &element);
-    T* find(const int key);
-    void resize(int size_change);
-    bool resizeRequired(int size_change);
-    void transfer(const T &element, int (*function)(T, int));
+    void setArray(T **new_array) { this->dynamic_array = new_array; }
+    DynamicArrayResult add(T * element);
+    DynamicArrayResult update(T * element, const int key);
+    T *find(const int key);
+    bool resize();
+    // bool resizeRequired(int size_change);
+    // void transfer(const T &element, int (*function)(T, int));
     void dynamicSetNullptr(int size);
 };
 

@@ -5,10 +5,11 @@
 #include "avl_node.hpp"
 #include "class_node.h"
 #include "course_node.h"
-#include "library.h"
+#include "library2.h"
 #include "two_way_list.hpp"
 #include "two_way_list_node.hpp"
 #include "hash_table.hpp"
+#include "dynamic_array.hpp"
 
 
 class classNode;
@@ -30,7 +31,7 @@ public:
     StatusType AddClass(int courseID, int* classID);
     StatusType WatchClass(int courseID, int classID, int time);
     StatusType TimeViewed(int courseID, int classID, int *timeViewed);
-    StatusType GetMostViewedClasses(int numOfClasses, int *courses, int *classes);
+    StatusType GetIthWatchedClass(int numOfClasses, int *courses, int *classes);
     hashTable<courseNode>* getCourses() { return this->courses; }
     avlTree<classNode>* getClasses() { return this->classes; }
     // avlTree<twList<int>>* getLists() { return this->lists; }
