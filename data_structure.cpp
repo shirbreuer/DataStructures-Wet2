@@ -208,24 +208,24 @@ StatusType courseManager::WatchClass(int courseID, int classID, int time)
 //     }
 // }
 
-void copyNodeToArrays(avlNode<classNode> *node, int *courses, int *classes, int index)
-{
-    courses[index] = node->getValue()->getCourseId();
-    classes[index] = node->getValue()->getKey();
-}
+// void copyNodeToArrays(avlNode<classNode> *node, int *courses, int *classes, int index)
+// {
+//     courses[index] = node->getValue()->getCourseId();
+//     classes[index] = node->getValue()->getKey();
+// }
 
-void copyEmptyClassesToArray(avlNode<twList<int>> *node, int *courses, int *classes, int *index_address, int classes_with_zero_views)
-{
-    twListNode<int> *head = node->getValue()->getHead();
-    twListNode<int> *tail = node->getValue()->getTail();
-    while (head->getNext() != tail && (classes_with_zero_views - *index_address))
-    {
-        head = head->getNext();
-        courses[*index_address] = node->getValue()->getKey();
-        classes[*index_address] = head->getValue();
-        (*index_address)++;
-    }
-}
+// void copyEmptyClassesToArray(avlNode<twList<int>> *node, int *courses, int *classes, int *index_address, int classes_with_zero_views)
+// {
+//     twListNode<int> *head = node->getValue()->getHead();
+//     twListNode<int> *tail = node->getValue()->getTail();
+//     while (head->getNext() != tail && (classes_with_zero_views - *index_address))
+//     {
+//         head = head->getNext();
+//         courses[*index_address] = node->getValue()->getKey();
+//         classes[*index_address] = head->getValue();
+//         (*index_address)++;
+//     }
+// }
 
 // StatusType courseManager::GetMostViewedClasses(int numOfClasses, int *courses, int *classes)
 // {
